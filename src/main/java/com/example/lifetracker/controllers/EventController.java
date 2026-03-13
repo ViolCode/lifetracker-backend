@@ -46,5 +46,4 @@ public class EventController {
     public Event createEvent(@RequestBody Event event) {
         return this.eventService.createEvent(event);
     }
-
 }
