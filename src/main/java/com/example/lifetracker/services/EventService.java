@@ -1,96 +1,55 @@
 package com.example.lifetracker.services;
 
-import com.example.lifetracker.domains.Event;
+import com.example.lifetracker.DTOs.EventRequestDTO;
+import com.example.lifetracker.DTOs.EventResponseDTO;
+import com.example.lifetracker.domains.EventEntity;
 import com.example.lifetracker.exeptions.NotFoundExeption;
+import com.example.lifetracker.mappers.EventMapper;
+import com.example.lifetracker.repositories.EventRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 @Service
 public class EventService {
 
-    private static List<Event> events = new ArrayList<>();
+    private final EventRepository repository;
 
-    public EventService() {
-
-        if (events.isEmpty()) {
-
-            events.add(new Event(
-                    1,
-                    "Trip",
-                    "Weekend trip with friends",
-                    LocalDate.of(2025, 6, 12),
-                    LocalTime.of(9, 0),
-                    LocalTime.of(18, 0),
-                    "Amsterdam",
-                    500
-            ));
-
-            events.add(new Event(
-                    2,
-                    "Birthday Party",
-                    "Anna's 22nd birthday",
-                    LocalDate.of(2025, 7, 3),
-                    LocalTime.of(19, 0),
-                    null,
-                    "Rotterdam",
-                    300
-            ));
-        }
+    public EventService(EventRepository repository) {
+        this.repository = repository;
     }
 
-    public List<Event> getAllEvents() {
-        return events;
+    public List<EventResponseDTO> getAll() {
+        return repository.findAll()
+                .stream()
+                .map(EventMapper::toDTO)
+                .toList();
     }
 
-    public Event getEventById(int id) {
-        return events.stream()
-                .filter(e -> e.getId() == id)
-                .findFirst()
+    public EventResponseDTO getById(int id) {
+        EventEntity event = repository.findById(id)
                 .orElseThrow(() -> new NotFoundExeption("Event not found"));
+
+        return EventMapper.toDTO(event);
     }
 
-    public Event updateEvent(int id, Map<String, Object> updates) {
-        Event event = getEventById(id);
-
-        updates.forEach((key, value) -> {
-            switch (key) {
-                case "title" -> event.setTitle((String) value);
-                case "description" -> event.setDescription((String) value);
-                case "location" -> event.setLocation((String) value);
-                case "expenses" -> event.setExpenses(Double.parseDouble(value.toString()));
-                case "date" -> event.setDate(LocalDate.parse(value.toString(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-                case "startTime" -> event.setStartTime(LocalTime.parse(value.toString(), DateTimeFormatter.ofPattern("HH:mm")));
-                case "endTime" -> event.setEndTime(LocalTime.parse(value.toString(), DateTimeFormatter.ofPattern("HH:mm"))
-                );
-            }
-        });
-
-        return event;
+    public EventResponseDTO create(EventRequestDTO dto) {
+        EventEntity entity = EventMapper.toEntity(dto);
+        return EventMapper.toDTO(repository.save(entity));
     }
 
-    public Event createEvent(Event event) {
+    public EventResponseDTO update(int id, EventRequestDTO dto) {
+        EventEntity existing = repository.findById(id)
+                .orElseThrow(() -> new NotFoundExeption("Event not found"));
 
-        int newId = events.size() + 1;
+        existing.setTitle(dto.getTitle());
+        existing.setDescription(dto.getDescription());
+        existing.setLocation(dto.getLocation());
+        existing.setPlannedDate(dto.getPlannedDate());
+        existing.setStartTime(dto.getStartTime());
+        existing.setEndTime(dto.getEndTime());
+        existing.setPlannedBudget(dto.getPlannedBudget());
 
-        Event newEvent = new Event(
-                newId,
-                event.getTitle(),
-                event.getDescription(),
-                event.getDate(),
-                event.getStartTime(),
-                event.getEndTime(),
-                event.getLocation(),
-                event.getExpenses()
-        );
-
-        events.add(newEvent);
-
-        return newEvent;
+        return EventMapper.toDTO(repository.save(existing));
     }
+
 }

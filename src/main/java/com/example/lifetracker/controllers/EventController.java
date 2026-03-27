@@ -1,49 +1,38 @@
 package com.example.lifetracker.controllers;
 
-import com.example.lifetracker.domains.Event;
-import com.example.lifetracker.exeptions.NotFoundExeption;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.lifetracker.DTOs.EventRequestDTO;
+import com.example.lifetracker.DTOs.EventResponseDTO;
 import org.springframework.web.bind.annotation.*;
 import com.example.lifetracker.services.EventService;
 
 import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/events")
 public class EventController {
 
-    private final EventService eventService;
+    private final EventService service;
 
-    public EventController(EventService eventService) {
-        this.eventService = eventService;
+    public EventController(EventService service) {
+        this.service = service;
     }
 
     @GetMapping
-    public List<Event> getAllEvents() {
-        return this.eventService.getAllEvents();
+    public List<EventResponseDTO> getAll() {
+        return service.getAll();
     }
 
     @GetMapping("/{id}")
-    public Event getEventById(@PathVariable int id, HttpServletResponse response) {
-
-        try {
-            return this.eventService.getEventById(id);
-        }
-        catch (NotFoundExeption ex) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return null;
-        }
-
-    }
-
-    @PatchMapping("/{id}")
-    public Event updateEvent(@PathVariable int id, @RequestBody Map<String, Object> updates) {
-        return eventService.updateEvent(id, updates);
+    public EventResponseDTO getById(@PathVariable int id) {
+        return service.getById(id);
     }
 
     @PostMapping
-    public Event createEvent(@RequestBody Event event) {
-        return this.eventService.createEvent(event);
+    public EventResponseDTO create(@RequestBody EventRequestDTO dto) {
+        return service.create(dto);
+    }
+
+    @PutMapping("/{id}")
+    public EventResponseDTO update(@PathVariable int id, @RequestBody EventRequestDTO dto) {
+        return service.update(id, dto);
     }
 }

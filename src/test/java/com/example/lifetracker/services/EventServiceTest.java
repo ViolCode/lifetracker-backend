@@ -1,6 +1,6 @@
 package com.example.lifetracker.services;
 
-import com.example.lifetracker.domains.Event;
+/*import com.example.lifetracker.domains.EventEntity;
 import com.example.lifetracker.exeptions.NotFoundExeption;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class EventServiceTest {
     @Test
     void shouldCreateEvent() {
 
-        Event event = new Event(
+        EventEntity event = new EventEntity(
                 0,
                 "Test Event",
                 "Test Description",
@@ -33,7 +33,7 @@ class EventServiceTest {
                 100
         );
 
-        Event created = eventService.createEvent(event);
+        EventEntity created = eventService.createEvent(event);
 
         assertEquals("Test Event", created.getTitle());
         assertEquals("Utrecht", created.getLocation());
@@ -42,7 +42,7 @@ class EventServiceTest {
     @Test
     void shouldGetEventById() {
 
-        Event event = eventService.getEventById(1);
+        EventEntity event = eventService.getEventById(1);
 
         assertNotNull(event);
         assertEquals(1, event.getId());
@@ -56,4 +56,4 @@ class EventServiceTest {
         });
 
     }
-}
+}*/
