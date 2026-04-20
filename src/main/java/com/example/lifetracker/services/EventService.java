@@ -1,9 +1,8 @@
 package com.example.lifetracker.services;
 
-import com.example.lifetracker.DTOs.EventRequestDTO;
-import com.example.lifetracker.DTOs.EventResponseDTO;
-import com.example.lifetracker.domains.EventEntity;
-import com.example.lifetracker.exeptions.NotFoundExeption;
+import com.example.lifetracker.domains.Event;
+import com.example.lifetracker.entities.EventEntity;
+import com.example.lifetracker.exeptions.NotFoundException;
 import com.example.lifetracker.mappers.EventMapper;
 import com.example.lifetracker.repositories.EventRepository;
 import org.springframework.stereotype.Service;
@@ -13,43 +12,43 @@ import java.util.List;
 public class EventService {
 
     private final EventRepository repository;
+    private final EventMapper mapper;
 
-    public EventService(EventRepository repository) {
+    public EventService(EventRepository repository, EventMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
-    public List<EventResponseDTO> getAll() {
+    public List<Event> getAll() {
         return repository.findAll()
                 .stream()
-                .map(EventMapper::toDTO)
+                .map(mapper::toDomain)
                 .toList();
     }
 
-    public EventResponseDTO getById(int id) {
-        EventEntity event = repository.findById(id)
-                .orElseThrow(() -> new NotFoundExeption("Event not found"));
-
-        return EventMapper.toDTO(event);
+    public Event getById(int id) {
+        return repository.findById(id)
+                .map(mapper::toDomain)
+                .orElseThrow(() -> new NotFoundException("Event not found"));
     }
 
-    public EventResponseDTO create(EventRequestDTO dto) {
-        EventEntity entity = EventMapper.toEntity(dto);
-        return EventMapper.toDTO(repository.save(entity));
+    public Event create(Event event) {
+        EventEntity saved = repository.save(mapper.toEntity(event));
+        return mapper.toDomain(saved);
     }
 
-    public EventResponseDTO update(int id, EventRequestDTO dto) {
+    public Event update(int id, Event updated) {
         EventEntity existing = repository.findById(id)
-                .orElseThrow(() -> new NotFoundExeption("Event not found"));
+                .orElseThrow(() -> new NotFoundException("Event not found"));
 
-        existing.setTitle(dto.getTitle());
-        existing.setDescription(dto.getDescription());
-        existing.setLocation(dto.getLocation());
-        existing.setPlannedDate(dto.getPlannedDate());
-        existing.setStartTime(dto.getStartTime());
-        existing.setEndTime(dto.getEndTime());
-        existing.setPlannedBudget(dto.getPlannedBudget());
+        existing.setTitle(updated.getTitle());
+        existing.setDescription(updated.getDescription());
+        existing.setLocation(updated.getLocation());
+        existing.setPlannedDate(updated.getPlannedDate());
+        existing.setStartTime(updated.getStartTime());
+        existing.setEndTime(updated.getEndTime());
+        existing.setPlannedBudget(updated.getPlannedBudget());
 
-        return EventMapper.toDTO(repository.save(existing));
+        return mapper.toDomain(repository.save(existing));
     }
-
 }
