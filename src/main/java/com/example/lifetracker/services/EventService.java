@@ -1,68 +1,55 @@
 package com.example.lifetracker.services;
 
 import com.example.lifetracker.domains.Event;
-import com.example.lifetracker.entities.EventEntity;
 import com.example.lifetracker.exeptions.NotFoundException;
 import com.example.lifetracker.exeptions.ValidationException;
-import com.example.lifetracker.mappers.EventMapper;
-import com.example.lifetracker.repositories.EventRepository;
+import com.example.lifetracker.persistence.EventRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class EventService {
 
     private final EventRepository repository;
-    private final EventMapper mapper;
 
-    public EventService(EventRepository repository, EventMapper mapper) {
+    public EventService(EventRepository repository) {
         this.repository = repository;
-        this.mapper = mapper;
     }
 
     public List<Event> getAll() {
-        return repository.findAll()
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
+        return repository.getAll();
     }
 
     public Event getById(int id) {
-        return repository.findById(id)
-                .map(mapper::toDomain)
+        return repository.getById(id)
                 .orElseThrow(() -> new NotFoundException("Event not found"));
     }
 
     public Event create(Event event) {
         validate(event);
-        EventEntity saved = repository.save(mapper.toEntity(event));
-        return mapper.toDomain(saved);
+        return repository.save(event);
     }
 
     public Event update(int id, Event updated) {
         validate(updated);
 
-        EventEntity existing = repository.findById(id)
+        Event existing = repository.getById(id)
                 .orElseThrow(() -> new NotFoundException("Event not found"));
 
-        existing.setTitle(updated.getTitle());
-        existing.setDescription(updated.getDescription());
-        existing.setLocation(updated.getLocation());
-        existing.setPlannedDate(updated.getPlannedDate());
-        existing.setStartTime(updated.getStartTime());
-        existing.setEndTime(updated.getEndTime());
+        existing.update(
+                updated.getTitle(),
+                updated.getDescription(),
+                updated.getLocation(),
+                updated.getPlannedDate(),
+                updated.getStartTime(),
+                updated.getEndTime()
+        );
 
-        EventEntity saved = repository.save(existing);
-
-        return mapper.toDomain(saved);
+        return repository.save(existing);
     }
 
     public void delete(int id) {
-        EventEntity existing = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
-
-        repository.delete(existing);
+        repository.delete(id);
     }
 
     private void validate(Event event) {
@@ -72,10 +59,6 @@ public class EventService {
 
         if (event.getPlannedDate() == null) {
             throw new ValidationException("Planned date is required");
-        }
-
-        if (event.getPlannedBudget() != null && event.getPlannedBudget() < 0) {
-            throw new ValidationException("Budget cannot be negative");
         }
 
         if (event.getStartTime() != null && event.getEndTime() != null &&

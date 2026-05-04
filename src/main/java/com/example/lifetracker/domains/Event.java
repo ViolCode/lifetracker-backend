@@ -13,19 +13,16 @@ public class Event {
     private LocalDate plannedDate;
     private LocalTime startTime;
     private LocalTime endTime;
-    private Double plannedBudget;
 
     public Event(String title, String description, String location,
                  LocalDate plannedDate, LocalTime startTime,
-                 LocalTime endTime, Double plannedBudget) {
-
-        this(null, title, description, location, plannedDate, startTime, endTime, plannedBudget);
+                 LocalTime endTime) {
+        this(null, title, description, location, plannedDate, startTime, endTime);
     }
 
     public Event(Integer id, String title, String description, String location,
                  LocalDate plannedDate, LocalTime startTime,
-                 LocalTime endTime, Double plannedBudget) {
-
+                 LocalTime endTime) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -33,12 +30,11 @@ public class Event {
         this.plannedDate = plannedDate;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.plannedBudget = plannedBudget;
     }
 
     public void update(String title, String description, String location,
                        LocalDate plannedDate, LocalTime startTime,
-                       LocalTime endTime, Double plannedBudget) {
+                       LocalTime endTime) {
 
         this.title = title;
         this.description = description;
@@ -46,6 +42,5 @@ public class Event {
         this.plannedDate = plannedDate;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.plannedBudget = plannedBudget;
     }
 }

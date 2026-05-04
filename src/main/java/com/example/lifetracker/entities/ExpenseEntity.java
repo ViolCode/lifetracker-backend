@@ -15,12 +15,9 @@ public class ExpenseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private Integer eventId;
     private Integer userId;
-
     private Double amount;
     private String description;
-
     private LocalDateTime createdAt;
 }

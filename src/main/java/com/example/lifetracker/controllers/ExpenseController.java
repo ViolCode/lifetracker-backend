@@ -1,6 +1,8 @@
 package com.example.lifetracker.controllers;
 
 import com.example.lifetracker.DTOs.*;
+import com.example.lifetracker.domains.Expense;
+import com.example.lifetracker.exeptions.NotFoundException;
 import com.example.lifetracker.mappers.ExpenseMapper;
 import com.example.lifetracker.services.ExpenseService;
 import org.springframework.web.bind.annotation.*;

@@ -41,7 +41,7 @@ public class EventMapper {
                 entity.getLocation(),
                 entity.getPlannedDate(),
                 entity.getStartTime(),
-                entity.getEndTime(),
+                entity.getEndTime()
         );
     }
 
