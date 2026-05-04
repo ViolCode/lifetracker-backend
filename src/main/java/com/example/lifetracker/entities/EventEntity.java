@@ -10,22 +10,15 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "events")
 public class EventEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String title;
-
     @Column(columnDefinition = "text")
     private String description;
-
     private String location;
-
     private LocalDate plannedDate;
     private LocalTime startTime;
     private LocalTime endTime;
-    private Double plannedBudget;
-
     private Integer ownerId;
 }

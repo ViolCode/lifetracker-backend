@@ -13,5 +13,4 @@ public class EventRequestDTO {
     private LocalDate plannedDate;
     private LocalTime startTime;
     private LocalTime endTime;
-    private Double plannedBudget;
 }
