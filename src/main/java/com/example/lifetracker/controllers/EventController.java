@@ -101,7 +101,6 @@ public class EventController {
     public void delete(
             @PathVariable int id
     ) {
-
         service.delete(id);
     }
 }
