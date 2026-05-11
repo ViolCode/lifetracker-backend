@@ -1,16 +1,19 @@
 package com.example.lifetracker.DTOs;
-import lombok.Getter;
-import lombok.Setter;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
-@Setter
-public class EventRequestDTO {
-    private String title;
-    private String description;
-    private String location;
-    private LocalDate plannedDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
+public record EventRequestDTO(
+        @NotBlank(message = "Title is required")
+        String title,
+        String description,
+        String location,
+        @NotNull(message = "Planned date is required")
+        LocalDate plannedDate,
+        LocalTime startTime,
+        LocalTime endTime
+) {
 }

@@ -1,17 +1,16 @@
 package com.example.lifetracker.DTOs;
-import lombok.Getter;
-import lombok.Setter;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
-@Setter
-public class EventResponseDTO {
-    private Integer id;
-    private String title;
-    private String description;
-    private String location;
-    private LocalDate plannedDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
+public record EventResponseDTO(
+        Integer id,
+        String title,
+        String description,
+        String location,
+        LocalDate plannedDate,
+        LocalTime startTime,
+        LocalTime endTime,
+        Double totalExpenses
+) {
 }

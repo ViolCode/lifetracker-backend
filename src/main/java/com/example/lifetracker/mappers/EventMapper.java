@@ -12,12 +12,12 @@ public class EventMapper {
     public Event toDomain(EventRequestDTO dto) {
 
         return new Event(
-                dto.getTitle(),
-                dto.getDescription(),
-                dto.getLocation(),
-                dto.getPlannedDate(),
-                dto.getStartTime(),
-                dto.getEndTime()
+                dto.title(),
+                dto.description(),
+                dto.location(),
+                dto.plannedDate(),
+                dto.startTime(),
+                dto.endTime()
         );
     }
 
@@ -34,36 +34,34 @@ public class EventMapper {
         );
     }
 
-    public EventResponseDTO toDTO(Event event) {
-        EventResponseDTO dto = new EventResponseDTO();
-        mapEventToDTO(event, dto);
-        dto.setId(event.getId());
-        return dto;
+    public EventResponseDTO toDTO(Event event, Double totalExpenses)
+    {
+        return new EventResponseDTO(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getLocation(),
+                event.getPlannedDate(),
+                event.getStartTime(),
+                event.getEndTime(),
+                totalExpenses
+        );
     }
 
     public EventEntity toEntity(Event event) {
+
         EventEntity entity = new EventEntity();
-        mapEventToEntity(event, entity);
+
         entity.setId(event.getId());
+        entity.setTitle(event.getTitle());
+        entity.setDescription(event.getDescription());
+        entity.setLocation(event.getLocation());
+        entity.setPlannedDate(event.getPlannedDate());
+        entity.setStartTime(event.getStartTime());
+        entity.setEndTime(event.getEndTime());
+
         entity.setOwnerId(1);
+
         return entity;
-    }
-
-    private void mapEventToDTO(Event source, EventResponseDTO target) {
-        target.setTitle(source.getTitle());
-        target.setDescription(source.getDescription());
-        target.setLocation(source.getLocation());
-        target.setPlannedDate(source.getPlannedDate());
-        target.setStartTime(source.getStartTime());
-        target.setEndTime(source.getEndTime());
-    }
-
-    private void mapEventToEntity(Event source, EventEntity target) {
-        target.setTitle(source.getTitle());
-        target.setDescription(source.getDescription());
-        target.setLocation(source.getLocation());
-        target.setPlannedDate(source.getPlannedDate());
-        target.setStartTime(source.getStartTime());
-        target.setEndTime(source.getEndTime());
     }
 }

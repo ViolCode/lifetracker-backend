@@ -41,4 +41,15 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
                 .map(mapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public Double getTotalByEvent(int eventId) {
+
+        return jpa.getTotalByEvent(eventId);
+    }
+
+    @Override
+    public void delete(int evenIid) {
+        jpa.deleteById(evenIid);
+    }
 }

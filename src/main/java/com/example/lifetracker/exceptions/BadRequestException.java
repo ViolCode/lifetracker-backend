@@ -1,4 +1,4 @@
-package com.example.lifetracker.exeptions;
+package com.example.lifetracker.exceptions;
 
 public class BadRequestException extends RuntimeException {
     public BadRequestException(String message) {

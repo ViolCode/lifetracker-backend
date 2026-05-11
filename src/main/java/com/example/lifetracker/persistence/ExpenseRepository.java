@@ -8,4 +8,6 @@ public interface ExpenseRepository {
     Expense save(Expense expense);
     List<Expense> getAll();
     List<Expense> getByEvent(int eventId);
+    Double getTotalByEvent(int eventId);
+    void delete(int id);
 }

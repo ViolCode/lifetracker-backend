@@ -10,4 +10,5 @@ public interface EventRepository {
     Optional<Event> getById(int id);
     Event save(Event event);
     void delete(int id);
+    List<Event> getPastEvents();
 }

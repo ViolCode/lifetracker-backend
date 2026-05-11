@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 @Repository
 public class EventRepositoryImpl implements EventRepository {
@@ -44,5 +45,14 @@ public class EventRepositoryImpl implements EventRepository {
     @Override
     public void delete(int id) {
         jpa.deleteById(id);
+    }
+
+    @Override
+    public List<Event> getPastEvents() {
+
+        return jpa.findByPlannedDateBefore(LocalDate.now())
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
     }
 }

@@ -1,11 +1,13 @@
 package com.example.lifetracker.domains;
+
+import com.example.lifetracker.exceptions.ValidationException;
 import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
 public class Event {
-
     private final Integer id;
     private String title;
     private String description;
@@ -14,15 +16,42 @@ public class Event {
     private LocalTime startTime;
     private LocalTime endTime;
 
-    public Event(String title, String description, String location,
-                 LocalDate plannedDate, LocalTime startTime,
-                 LocalTime endTime) {
-        this(null, title, description, location, plannedDate, startTime, endTime);
+    public Event(
+            String title,
+            String description,
+            String location,
+            LocalDate plannedDate,
+            LocalTime startTime,
+            LocalTime endTime
+    ) {
+        this(
+                null,
+                title,
+                description,
+                location,
+                plannedDate,
+                startTime,
+                endTime
+        );
     }
 
-    public Event(Integer id, String title, String description, String location,
-                 LocalDate plannedDate, LocalTime startTime,
-                 LocalTime endTime) {
+    public Event(
+            Integer id,
+            String title,
+            String description,
+            String location,
+            LocalDate plannedDate,
+            LocalTime startTime,
+            LocalTime endTime
+    ) {
+
+        validate(
+                title,
+                plannedDate,
+                startTime,
+                endTime
+        );
+
         this.id = id;
         this.title = title;
         this.description = description;
@@ -32,9 +61,21 @@ public class Event {
         this.endTime = endTime;
     }
 
-    public void update(String title, String description, String location,
-                       LocalDate plannedDate, LocalTime startTime,
-                       LocalTime endTime) {
+    public void update(
+            String title,
+            String description,
+            String location,
+            LocalDate plannedDate,
+            LocalTime startTime,
+            LocalTime endTime
+    ) {
+
+        validate(
+                title,
+                plannedDate,
+                startTime,
+                endTime
+        );
 
         this.title = title;
         this.description = description;
@@ -42,5 +83,34 @@ public class Event {
         this.plannedDate = plannedDate;
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    private void validate(
+            String title,
+            LocalDate plannedDate,
+            LocalTime startTime,
+            LocalTime endTime
+    ) {
+
+        if (title == null || title.isBlank()) {
+            throw new ValidationException(
+                    "Title is required"
+            );
+        }
+
+        if (plannedDate == null) {
+            throw new ValidationException(
+                    "Planned date is required"
+            );
+        }
+
+        if (startTime != null &&
+                        endTime != null &&
+                        endTime.isBefore(startTime)
+        ) {
+            throw new ValidationException(
+                    "End time cannot be before start time"
+            );
+        }
     }
 }

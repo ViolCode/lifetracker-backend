@@ -1,6 +1,8 @@
 package com.example.lifetracker.mappers;
 
-import com.example.lifetracker.DTOs.*;
+import com.example.lifetracker.DTOs.ExpenseRequestDTO;
+import com.example.lifetracker.DTOs.ExpenseResponseDTO;
+import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.domains.Expense;
 import com.example.lifetracker.entities.ExpenseEntity;
 import org.springframework.stereotype.Component;
@@ -9,47 +11,51 @@ import org.springframework.stereotype.Component;
 public class ExpenseMapper {
 
     public Expense toDomain(ExpenseRequestDTO dto) {
+
         return new Expense(
-                dto.getEventId(),
-                1, // hardcoded user
-                dto.getAmount(),
-                dto.getDescription()
+                dto.eventId(),
+                1,
+                dto.amount(),
+                dto.description()
         );
     }
 
     public ExpenseEntity toEntity(Expense expense) {
-        ExpenseEntity e = new ExpenseEntity();
 
-        e.setId(expense.getId());
-        e.setEventId(expense.getEventId());
-        e.setUserId(expense.getUserId());
-        e.setAmount(expense.getAmount());
-        e.setDescription(expense.getDescription());
-        e.setCreatedAt(expense.getCreatedAt());
+        ExpenseEntity entity = new ExpenseEntity();
 
-        return e;
+        entity.setId(expense.getId());
+        entity.setEventId(expense.getEventId());
+        entity.setUserId(expense.getUserId());
+        entity.setAmount(expense.getAmount());
+        entity.setDescription(expense.getDescription());
+        entity.setCreatedAt(expense.getCreatedAt());
+
+        return entity;
     }
 
-    public Expense toDomain(ExpenseEntity e) {
+    public Expense toDomain(ExpenseEntity entity) {
+
         return new Expense(
-                e.getId(),
-                e.getEventId(),
-                e.getUserId(),
-                e.getAmount(),
-                e.getDescription(),
-                e.getCreatedAt()
+                entity.getId(),
+                entity.getEventId(),
+                entity.getUserId(),
+                entity.getAmount(),
+                entity.getDescription(),
+                entity.getCreatedAt()
         );
     }
 
-    public ExpenseResponseDTO toDTO(Expense e) {
-        ExpenseResponseDTO dto = new ExpenseResponseDTO();
-
-        dto.setId(e.getId());
-        dto.setEventId(e.getEventId());
-        dto.setAmount(e.getAmount());
-        dto.setDescription(e.getDescription());
-        dto.setCreatedAt(e.getCreatedAt());
-
-        return dto;
+    public ExpenseResponseDTO toDTO(Expense expense, Event event)
+    {
+        return new ExpenseResponseDTO(
+                expense.getId(),
+                expense.getEventId(),
+                event.getTitle(),
+                event.getPlannedDate(),
+                expense.getAmount(),
+                expense.getDescription(),
+                expense.getCreatedAt()
+        );
     }
 }

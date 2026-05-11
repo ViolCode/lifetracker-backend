@@ -1,4 +1,4 @@
-package com.example.lifetracker.exeptions;
+package com.example.lifetracker.exceptions;
 
 public class ConflictException extends RuntimeException {
     public ConflictException(String message) {

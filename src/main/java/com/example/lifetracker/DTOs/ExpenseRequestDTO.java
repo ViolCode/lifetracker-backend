@@ -1,12 +1,14 @@
 package com.example.lifetracker.DTOs;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
-@Getter
-@Setter
-public class ExpenseRequestDTO {
-    private Integer eventId;
-    private Double amount;
-    private String description;
+public record ExpenseRequestDTO(
+        @NotNull(message = "Event id is required")
+        Integer eventId,
+        @NotNull(message = "Amount is required")
+        @Positive(message = "Amount must be greater than 0")
+        Double amount,
+        String description
+) {
 }

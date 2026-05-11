@@ -1,4 +1,4 @@
-package com.example.lifetracker.exeptions;
+package com.example.lifetracker.exceptions;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {
