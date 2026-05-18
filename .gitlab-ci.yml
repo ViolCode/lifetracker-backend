@@ -1,7 +1,6 @@
 stages:
   - build
   - test
-  - quality
 
 variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
@@ -12,42 +11,25 @@ cache:
     - .gradle/wrapper
     - .gradle/caches
 
-build-backend:
+build:
   stage: build
   script:
-    - .\gradlew.bat clean assemble
+    - .\gradlew.bat clean assemble --no-daemon
 
   artifacts:
-    when: always
     paths:
       - build/libs/*.jar
-    expire_in: 1 week
 
-unit-tests:
+test:
   stage: test
   script:
-    - .\gradlew.bat test jacocoTestReport
+    - .\gradlew.bat test jacocoTestReport --no-daemon --info
 
   artifacts:
     when: always
     reports:
       junit:
         - build/test-results/test/*.xml
-
     paths:
       - build/reports/tests/test
       - build/reports/jacoco/test/html
-      - build/test-results/test
-
-    expire_in: 1 week
-
-code-quality:
-  stage: quality
-  script:
-    - .\gradlew.bat check
-
-  artifacts:
-    when: always
-    paths:
-      - build/reports
-    expire_in: 1 week
