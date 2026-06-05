@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface ExpenseRepository {
     Expense save(Expense expense);
-    List<Expense> getAll();
-    List<Expense> getByEvent(int eventId);
-    Double getTotalByEvent(int eventId);
+    List<Expense> getAll(Integer userId);
+    List<Expense> getByEvent(int eventId, Integer userId);
+    Double getTotalByEvent(int eventId, Integer userId);
     void delete(int id);
 }

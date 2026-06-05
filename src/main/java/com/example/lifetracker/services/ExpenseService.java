@@ -5,6 +5,7 @@ import com.example.lifetracker.domains.Expense;
 import com.example.lifetracker.exceptions.NotFoundException;
 import com.example.lifetracker.persistence.EventRepository;
 import com.example.lifetracker.persistence.ExpenseRepository;
+import com.example.lifetracker.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,57 +18,47 @@ public class ExpenseService {
     private final ExpenseRepository repository;
     private final EventRepository eventRepository;
 
-    public ExpenseService(
-            ExpenseRepository repository,
-            EventRepository eventRepository
-    ) {
+    public ExpenseService(ExpenseRepository repository, EventRepository eventRepository) {
         this.repository = repository;
         this.eventRepository = eventRepository;
     }
 
     public Expense create(Expense expense) {
-
         validate(expense);
-
         return repository.save(expense);
     }
 
     public List<Expense> getAll() {
-
-        return repository.getAll();
+        Integer userId = SecurityUtils.getCurrentUserId();
+        return repository.getAll(userId);
     }
 
     public List<Expense> getByEvent(int eventId) {
-
-        return repository.getByEvent(eventId);
+        Integer userId = SecurityUtils.getCurrentUserId();
+        return repository.getByEvent(eventId, userId);
     }
 
     public Double getTotalByEvent(int eventId) {
-
-        return repository.getTotalByEvent(eventId);
+        Integer userId = SecurityUtils.getCurrentUserId();
+        return repository.getTotalByEvent(eventId, userId);
     }
 
     public void delete(int id) {
-
         repository.delete(id);
     }
 
     private void validate(Expense expense) {
-
-        eventRepository.getById(expense.getEventId())
-                .orElseThrow(() ->
-                        new NotFoundException(
-                                "Event not found"
-                        )
-                );
+        Integer userId = SecurityUtils.getCurrentUserId();
+        eventRepository
+                .getById(expense.getEventId(), userId)
+                .orElseThrow(() -> new NotFoundException("Event not found"));
     }
 
     public Event getEventForExpense(Expense expense) {
+        Integer userId = SecurityUtils.getCurrentUserId();
 
         return eventRepository
-                .getById(expense.getEventId())
-                .orElseThrow(() ->
-                        new NotFoundException("Event not found")
-                );
+                .getById(expense.getEventId(), userId)
+                .orElseThrow(() -> new NotFoundException("Event not found"));
     }
 }

@@ -5,16 +5,16 @@ import com.example.lifetracker.DTOs.ExpenseResponseDTO;
 import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.domains.Expense;
 import com.example.lifetracker.entities.ExpenseEntity;
+import com.example.lifetracker.security.SecurityUtils;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ExpenseMapper {
 
     public Expense toDomain(ExpenseRequestDTO dto) {
-
         return new Expense(
                 dto.eventId(),
-                1,
+                SecurityUtils.getCurrentUserId(),
                 dto.amount(),
                 dto.description()
         );
