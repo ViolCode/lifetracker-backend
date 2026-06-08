@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService service;
-    private final AuthenticationManager authenticationManager; // <-- YOU FORGOT THIS
+    private final AuthenticationManager authenticationManager;
 
     public AuthController(AuthService service, AuthenticationManager authenticationManager) {
         this.service = service;
@@ -45,27 +45,12 @@ public class AuthController {
             @RequestBody LoginRequestDTO dto,
             HttpServletRequest request
     ) {
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
 
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(
-                        dto.email(),
-                        dto.password()
-                );
-
-        Authentication auth =
-                authenticationManager.authenticate(token);
-
-        SecurityContextHolder.getContext()
-                .setAuthentication(auth);
-
-        request.getSession(true)
-                .setAttribute(
-                        "SPRING_SECURITY_CONTEXT",
-                        SecurityContextHolder.getContext()
-                );
-
-        UserPrincipal principal =
-                (UserPrincipal) auth.getPrincipal();
+        Authentication auth = authenticationManager.authenticate(token);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        request.getSession(true).setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+        UserPrincipal principal = (UserPrincipal) auth.getPrincipal();
 
         return new AuthResponseDTO(
                 principal.getId(),
