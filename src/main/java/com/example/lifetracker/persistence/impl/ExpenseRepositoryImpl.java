@@ -15,41 +15,67 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     private final ExpenseRepositoryJPA jpa;
     private final ExpenseMapper mapper;
 
-    public ExpenseRepositoryImpl(ExpenseRepositoryJPA jpa, ExpenseMapper mapper) {
+    public ExpenseRepositoryImpl(
+            ExpenseRepositoryJPA jpa,
+            ExpenseMapper mapper
+    ) {
         this.jpa = jpa;
         this.mapper = mapper;
     }
 
     @Override
-    public Expense save(Expense expense) {
-        ExpenseEntity saved = jpa.save(mapper.toEntity(expense));
+    public Expense save(
+            Expense expense
+    ) {
+
+        ExpenseEntity saved =
+                jpa.save(
+                        mapper.toEntity(expense)
+                );
+
         return mapper.toDomain(saved);
     }
 
     @Override
-    public List<Expense> getAll() {
-        return jpa.findAll()
+    public List<Expense> getAll(
+            Integer userId
+    ) {
+
+        return jpa.findByUserId(userId)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
     }
 
     @Override
-    public List<Expense> getByEvent(int eventId) {
-        return jpa.findByEventId(eventId)
+    public List<Expense> getByEvent(
+            int eventId,
+            Integer userId
+    ) {
+
+        return jpa.findByEventIdAndUserId(
+                        eventId,
+                        userId
+                )
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
     }
 
     @Override
-    public Double getTotalByEvent(int eventId) {
+    public Double getTotalByEvent(
+            int eventId,
+            Integer userId
+    ) {
 
-        return jpa.getTotalByEvent(eventId);
+        return jpa.getTotalByEvent(
+                eventId,
+                userId
+        );
     }
 
     @Override
-    public void delete(int evenIid) {
-        jpa.deleteById(evenIid);
+    public void delete(int id) {
+        jpa.deleteById(id);
     }
 }

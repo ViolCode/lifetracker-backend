@@ -7,10 +7,10 @@ import lombok.Getter;
 public class User {
 
     private final Integer id;
-    private String email;
-    private String password;
-    private String name;
-    private Boolean isPremium;
+    private final String email;
+    private final String password;
+    private final String name;
+    private final Boolean isPremium;
 
     public User(
             Integer id,

@@ -48,9 +48,12 @@ public class EventMapper {
         );
     }
 
-    public EventEntity toEntity(Event event) {
+    public EventEntity toEntity(
+            Event event
+    ) {
 
-        EventEntity entity = new EventEntity();
+        EventEntity entity =
+                new EventEntity();
 
         entity.setId(event.getId());
         entity.setTitle(event.getTitle());
@@ -59,8 +62,6 @@ public class EventMapper {
         entity.setPlannedDate(event.getPlannedDate());
         entity.setStartTime(event.getStartTime());
         entity.setEndTime(event.getEndTime());
-
-        entity.setOwnerId(1);
 
         return entity;
     }

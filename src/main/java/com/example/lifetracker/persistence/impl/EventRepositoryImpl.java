@@ -23,22 +23,32 @@ public class EventRepositoryImpl implements EventRepository {
     }
 
     @Override
-    public List<Event> getAll() {
-        return jpa.findAll()
+    public List<Event> getAll(Integer ownerId) {
+
+        return jpa.findByOwnerId(ownerId)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
     }
 
     @Override
-    public Optional<Event> getById(int id) {
+    public Optional<Event> getById(int id, Integer ownerId) {
+
         return jpa.findById(id)
+                .filter(event ->
+                        ownerId.equals(
+                                event.getOwnerId()
+                        )
+                )
                 .map(mapper::toDomain);
     }
 
     @Override
-    public Event save(Event event) {
-        EventEntity saved = jpa.save(mapper.toEntity(event));
+    public Event save(Event event, Integer ownerId) {
+        EventEntity entity = mapper.toEntity(event);
+        entity.setOwnerId(ownerId);
+        EventEntity saved = jpa.save(entity);
+
         return mapper.toDomain(saved);
     }
 
@@ -48,9 +58,12 @@ public class EventRepositoryImpl implements EventRepository {
     }
 
     @Override
-    public List<Event> getPastEvents() {
+    public List<Event> getPastEvents(Integer ownerId) {
 
-        return jpa.findByPlannedDateBefore(LocalDate.now())
+        return jpa.findByOwnerIdAndPlannedDateBefore(
+                        ownerId,
+                        LocalDate.now()
+                )
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
