@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - quality
 
 variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
@@ -17,8 +18,10 @@ build:
     - .\gradlew.bat clean assemble --no-daemon
 
   artifacts:
+    when: always
     paths:
       - build/libs/*.jar
+    expire_in: 1 week
 
 test:
   stage: test
@@ -30,6 +33,21 @@ test:
     reports:
       junit:
         - build/test-results/test/*.xml
+
     paths:
       - build/reports/tests/test
       - build/reports/jacoco/test/html
+      - build/test-results/test
+
+    expire_in: 1 week
+
+quality:
+  stage: quality
+  script:
+    - .\gradlew.bat check --no-daemon --info
+
+  artifacts:
+    when: always
+    paths:
+      - build/reports
+    expire_in: 1 week
