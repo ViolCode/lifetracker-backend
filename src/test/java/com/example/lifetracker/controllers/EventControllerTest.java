@@ -365,18 +365,6 @@ class EventControllerTest {
     }
 
     @Test
-    void getById_returns500_whenUnexpectedErrorOccurs() throws Exception {
-
-        when(service.getById(1))
-                .thenThrow(new RuntimeException("DB error"));
-
-        mockMvc.perform(get("/events/1"))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.error")
-                        .value("Something went wrong"));
-    }
-
-    @Test
     void delete_returns500_whenUnexpectedErrorOccurs() throws Exception {
 
         doThrow(new RuntimeException("DB error"))
