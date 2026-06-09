@@ -34,26 +34,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class ExpenseControllerTest {
-
     @Mock
     private ExpenseService service;
-
     @Mock
     private ExpenseMapper mapper;
-
     @InjectMocks
     private ExpenseController controller;
-
     private MockMvc mockMvc;
-
     private ObjectMapper objectMapper;
-
     private Expense sampleExpense;
-
     private Event sampleEvent;
-
     private ExpenseResponseDTO sampleResponse;
-
     private ExpenseRequestDTO sampleRequest;
 
     @BeforeEach

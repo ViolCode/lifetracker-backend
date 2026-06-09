@@ -78,13 +78,13 @@ public class EventService {
     }
 
     public void delete(int id) {
+        Integer userId = SecurityUtils.getCurrentUserId();
+        repository.getById(id, userId).orElseThrow(() -> new NotFoundException("Event not found"));
         repository.delete(id);
     }
 
     public List<Event> getPastEvents() {
-
         Integer userId = SecurityUtils.getCurrentUserId();
-
         return repository.getPastEvents(userId);
     }
 }

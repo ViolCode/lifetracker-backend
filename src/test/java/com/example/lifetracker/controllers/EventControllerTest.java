@@ -35,24 +35,16 @@ class EventControllerTest {
 
     @Mock
     private EventService service;
-
     @Mock
     private EventMapper mapper;
-
     @Mock
     private ExpenseService expenseService;
-
     @InjectMocks
     private EventController controller;
-
     private MockMvc mockMvc;
-
     private ObjectMapper objectMapper;
-
     private Event sampleEvent;
-
     private EventRequestDTO sampleRequest;
-
     private EventResponseDTO sampleResponse;
 
     @BeforeEach
