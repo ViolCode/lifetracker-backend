@@ -187,7 +187,6 @@ class ExpenseControllerTest {
 
     @Test
     void delete_returns200() throws Exception {
-
         mockMvc.perform(delete("/expenses/1")).andExpect(status().isOk());
     }
 }
