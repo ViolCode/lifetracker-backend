@@ -52,12 +52,17 @@ class ExpenseServiceTest {
                 null
         );
 
-        when(eventRepository.getById(eq(1), anyInt())).thenReturn(Optional.of(event));
-        when(repository.save(expense)).thenReturn(expense);
+        when(eventRepository.getById(eq(1), anyInt()))
+                .thenReturn(Optional.of(event));
+
+        when(repository.save(expense))
+                .thenReturn(expense);
 
         Expense result = service.create(expense);
 
         assertEquals(20.0, result.getAmount());
+
+        verify(repository).save(expense);
     }
 
     @Test
@@ -70,7 +75,8 @@ class ExpenseServiceTest {
                 "Food"
         );
 
-        when(eventRepository.getById(eq(999), anyInt())).thenReturn(Optional.empty());
+        when(eventRepository.getById(eq(999), anyInt()))
+                .thenReturn(Optional.empty());
 
         assertThrows(
                 NotFoundException.class,
@@ -80,7 +86,9 @@ class ExpenseServiceTest {
 
     @Test
     void shouldDeleteExpense() {
+
         service.delete(1);
+
         verify(repository).delete(1);
     }
 }

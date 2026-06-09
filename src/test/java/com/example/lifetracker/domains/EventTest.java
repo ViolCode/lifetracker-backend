@@ -107,4 +107,85 @@ class EventTest {
         assertEquals("New", event.getTitle());
         assertEquals("Amsterdam", event.getLocation());
     }
+
+    @Test
+    void shouldThrowWhenTitleContainsOnlySpaces() {
+
+        assertThrows(
+                ValidationException.class,
+                () -> new Event(
+                        "   ",
+                        "desc",
+                        "loc",
+                        LocalDate.now(),
+                        null,
+                        null
+                )
+        );
+    }
+
+    @Test
+    void shouldThrowWhenUpdatingWithBlankTitle() {
+
+        Event event = new Event(
+                "Old",
+                "desc",
+                "loc",
+                LocalDate.now(),
+                null,
+                null
+        );
+
+        assertThrows(
+                ValidationException.class,
+                () -> event.update(
+                        "",
+                        "desc",
+                        "loc",
+                        LocalDate.now(),
+                        null,
+                        null
+                )
+        );
+    }
+
+    @Test
+    void shouldThrowWhenUpdatingWithInvalidTimes() {
+
+        Event event = new Event(
+                "Old",
+                "desc",
+                "loc",
+                LocalDate.now(),
+                null,
+                null
+        );
+
+        assertThrows(
+                ValidationException.class,
+                () -> event.update(
+                        "New",
+                        "desc",
+                        "loc",
+                        LocalDate.now(),
+                        LocalTime.of(15, 0),
+                        LocalTime.of(14, 0)
+                )
+        );
+    }
+
+    @Test
+    void shouldAllowSameStartAndEndTime() {
+
+        Event event = new Event(
+                "Gym",
+                "desc",
+                "loc",
+                LocalDate.now(),
+                LocalTime.of(10, 0),
+                LocalTime.of(10, 0)
+        );
+
+        assertNotNull(event);
+    }
 }

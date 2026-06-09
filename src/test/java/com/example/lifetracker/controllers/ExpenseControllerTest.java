@@ -184,6 +184,22 @@ class ExpenseControllerTest {
     }
 
     @Test
+    void create_returns400_whenAmountInvalid() throws Exception {
+
+        ExpenseRequestDTO request =
+                new ExpenseRequestDTO(
+                        10,
+                        0.0,
+                        "Dinner"
+                );
+
+        mockMvc.perform(post("/expenses")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void delete_returns200() throws Exception {
 
         mockMvc.perform(delete("/expenses/1"))

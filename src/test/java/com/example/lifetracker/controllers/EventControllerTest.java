@@ -296,6 +296,24 @@ class EventControllerTest {
     }
 
     @Test
+    void update_returns400_whenTitleIsMissing() throws Exception {
+
+        EventRequestDTO invalidRequest = new EventRequestDTO(
+                "",
+                "Workout",
+                "Eindhoven",
+                LocalDate.now(),
+                null,
+                null
+        );
+
+        mockMvc.perform(put("/events/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void create_returns500_whenUnexpectedErrorOccurs() throws Exception {
 
         when(mapper.toDomain(any(EventRequestDTO.class)))
@@ -304,6 +322,68 @@ class EventControllerTest {
         mockMvc.perform(post("/events")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sampleRequest)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error")
+                        .value("Something went wrong"));
+    }
+
+    @Test
+    void getHistory_returnsEmptyList() throws Exception {
+
+        when(service.getPastEvents())
+                .thenReturn(List.of());
+
+        mockMvc.perform(get("/events/history"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    @Test
+    void update_returns500_whenUnexpectedErrorOccurs() throws Exception {
+
+        when(mapper.toDomain(any(EventRequestDTO.class)))
+                .thenThrow(new RuntimeException("DB error"));
+
+        mockMvc.perform(put("/events/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(sampleRequest)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error")
+                        .value("Something went wrong"));
+    }
+
+    @Test
+    void getHistory_returns500_whenUnexpectedErrorOccurs() throws Exception {
+
+        when(service.getPastEvents())
+                .thenThrow(new RuntimeException("DB error"));
+
+        mockMvc.perform(get("/events/history"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error")
+                        .value("Something went wrong"));
+    }
+
+    @Test
+    void getById_returns500_whenUnexpectedErrorOccurs() throws Exception {
+
+        when(service.getById(1))
+                .thenThrow(new RuntimeException("DB error"));
+
+        mockMvc.perform(get("/events/1"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error")
+                        .value("Something went wrong"));
+    }
+
+    @Test
+    void delete_returns500_whenUnexpectedErrorOccurs() throws Exception {
+
+        doThrow(new RuntimeException("DB error"))
+                .when(service)
+                .delete(1);
+
+        mockMvc.perform(delete("/events/1"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.error")
                         .value("Something went wrong"));
