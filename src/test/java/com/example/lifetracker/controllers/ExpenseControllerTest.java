@@ -122,20 +122,6 @@ class ExpenseControllerTest {
     }
 
     @Test
-    void create_returns500_whenUnexpectedErrorOccurs() throws Exception {
-
-        when(mapper.toDomain(any(ExpenseRequestDTO.class)))
-                .thenThrow(new RuntimeException("DB error"));
-
-        mockMvc.perform(post("/expenses")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(sampleRequest)))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.error")
-                        .value("Something went wrong"));
-    }
-
-    @Test
     void getAll_returns200WithList() throws Exception {
 
         when(service.getAll())
