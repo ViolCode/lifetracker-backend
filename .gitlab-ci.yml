@@ -1,48 +1,60 @@
 stages:
   - build
   - test
-  - sonar
+  - sonarqube
 
 variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
-  SONAR_USER_HOME: "$CI_PROJECT_DIR/.sonar"
   GIT_DEPTH: "0"
 
 cache:
-  policy: pull-push
   paths:
     - .gradle/wrapper
     - .gradle/caches
-    - .sonar/cache
 
 build:
   stage: build
-
+  tags:
+    - docker-runner
+  image: gradle:9.3.1-jdk21
   script:
-    - .\gradlew.bat clean assemble --no-daemon
-
+    - cd lifetracker
+    - gradle clean assemble --no-daemon
   artifacts:
     paths:
-      - build/libs/*.jar
+      - lifetracker/build/libs/*.jar
 
 test:
   stage: test
-
+  tags:
+    - docker-runner
+  image: gradle:9.3.1-jdk21
   script:
-    - .\gradlew.bat test jacocoTestReport --no-daemon
-
+    - cd lifetracker
+    - gradle test jacocoTestReport --no-daemon
   artifacts:
     reports:
       junit:
-        - build/test-results/test/*.xml
-
+        - lifetracker/build/test-results/test/*.xml
     paths:
-      - build/reports/tests/test
-      - build/reports/jacoco/test
-      - build/test-results/test
+      - lifetracker/build/reports/tests/test
+      - lifetracker/build/reports/jacoco/test
 
 sonarqube:
-  stage: sonar
-
+  stage: sonarqube
+  tags:
+    - docker-runner
+  image: gradle:9.3.1-jdk21
+  dependencies:
+    - test
+  variables:
+    SONAR_HOST_URL: "http://host.docker.internal:9000"
   script:
-    - .\gradlew.bat sonar --info
+    - cd lifetracker
+    - gradle sonarqube \
+        -Dsonar.host.url=${SONAR_HOST_URL} \
+        -Dsonar.login=${SONAR_TOKEN} \
+        --no-daemon
+  allow_failure: true
+  only:
+    - master
