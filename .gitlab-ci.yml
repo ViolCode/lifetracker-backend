@@ -8,6 +8,5 @@ test-docker-runner:
   image: alpine:latest
   script:
     - echo "Docker runner is WORKING!"
-    - echo "Current time: $(date)"
     - echo "Is SonarQube reachable?:"
     - wget -q -O- http://host.docker.internal:9000/api/system/status || echo "Will fix network later"
