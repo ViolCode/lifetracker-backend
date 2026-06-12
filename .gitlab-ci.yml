@@ -22,6 +22,7 @@ build:
   artifacts:
     paths:
       - build/libs/*.jar
+      - build/classes/java/main 
 
 test:
   stage: test
