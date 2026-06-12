@@ -1,34 +1,36 @@
+image: gradle:9.3.1-jdk21
+
+variables:
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  GIT_DEPTH: "0"
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+
+cache:
+  key: "gradle-cache-$CI_COMMIT_REF_SLUG"
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
 stages:
   - build
   - test
   - sonarqube
 
-variables:
-  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
-  GIT_DEPTH: "0"
-
-cache:
-  paths:
-    - .gradle/wrapper
-    - .gradle/caches
-
 build:
   stage: build
   tags:
     - docker-runner
-  image: gradle:9.3.1-jdk21
   script:
     - gradle clean assemble --no-daemon
   artifacts:
     paths:
       - build/libs/*.jar
-      - build/classes/java/main 
+      - build/classes/java/main
 
 test:
   stage: test
   tags:
     - docker-runner
-  image: gradle:9.3.1-jdk21
   script:
     - gradle test jacocoTestReport --no-daemon
   artifacts:
@@ -43,11 +45,12 @@ sonarqube:
   stage: sonarqube
   tags:
     - docker-runner
-  image: gradle:9.3.1-jdk21
-  dependencies:
-    - build
-  script:
-    - gradle sonar -Dsonar.host.url=http://host.docker.internal:9000 -Dsonar.token=${SONAR_TOKEN} --no-daemon
+  cache:
+    policy: pull-push
+    key: "sonar-cache-$CI_COMMIT_REF_SLUG"
+    paths:
+      - "${SONAR_USER_HOME}/cache"
+  script: gradle sonar
   allow_failure: true
   only:
     - master
