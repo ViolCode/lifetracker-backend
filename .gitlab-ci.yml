@@ -47,7 +47,7 @@ sonarqube:
   dependencies:
     - build
   script:
-    - gradle sonar -Dsonar.host.url=http://host.docker.internal:9000 -Dsonar.login=${SONAR_TOKEN} --no-daemon
+    - gradle sonar -Dsonar.host.url=http://host.docker.internal:9000 -Dsonar.token=${SONAR_TOKEN} --no-daemon
   allow_failure: true
   only:
     - master
