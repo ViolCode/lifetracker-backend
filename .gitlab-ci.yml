@@ -18,11 +18,10 @@ build:
     - docker-runner
   image: gradle:9.3.1-jdk21
   script:
-    - cd lifetracker
     - gradle clean assemble --no-daemon
   artifacts:
     paths:
-      - lifetracker/build/libs/*.jar
+      - build/libs/*.jar
 
 test:
   stage: test
@@ -30,15 +29,14 @@ test:
     - docker-runner
   image: gradle:9.3.1-jdk21
   script:
-    - cd lifetracker
     - gradle test jacocoTestReport --no-daemon
   artifacts:
     reports:
       junit:
-        - lifetracker/build/test-results/test/*.xml
+        - build/test-results/test/*.xml
     paths:
-      - lifetracker/build/reports/tests/test
-      - lifetracker/build/reports/jacoco/test
+      - build/reports/tests/test
+      - build/reports/jacoco/test
 
 sonarqube:
   stage: sonarqube
@@ -50,11 +48,10 @@ sonarqube:
   variables:
     SONAR_HOST_URL: "http://host.docker.internal:9000"
   script:
-    - cd lifetracker
     - gradle sonarqube \
         -Dsonar.host.url=${SONAR_HOST_URL} \
         -Dsonar.login=${SONAR_TOKEN} \
         --no-daemon
   allow_failure: true
   only:
-    - master
+        - master
