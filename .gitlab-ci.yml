@@ -46,7 +46,7 @@ sonarqube:
   dependencies:
     - test
   script:
-    - gradle sonarqube --no-daemon
+    - gradle sonar --no-daemon
   allow_failure: true
   only:
     - master
