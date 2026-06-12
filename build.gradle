@@ -31,7 +31,7 @@ sonar {
         property "sonar.projectKey", "I565140_lifetracker_abdf236e-dbde-487b-be0f-511ba6f55abf"
         property "sonar.projectName", "LifeTracker"
         property "sonar.qualitygate.wait", true
-        property "sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
 
