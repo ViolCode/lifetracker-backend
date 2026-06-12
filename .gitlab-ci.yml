@@ -46,7 +46,7 @@ sonarqube:
   dependencies:
     - test
   script:
-    - gradle sonarqube -Dsonar.host.url=${SONAR_HOST_URL} -Dsonar.login=${SONAR_TOKEN} --no-daemon
+    - gradle sonarqube --no-daemon
   allow_failure: true
   only:
     - master
