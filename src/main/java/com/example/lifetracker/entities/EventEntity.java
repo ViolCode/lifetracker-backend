@@ -21,4 +21,5 @@ public class EventEntity {
     private LocalTime startTime;
     private LocalTime endTime;
     private Integer ownerId;
+    private Double plannedBudget;
 }
