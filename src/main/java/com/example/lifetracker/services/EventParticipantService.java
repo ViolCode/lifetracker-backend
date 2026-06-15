@@ -1,4 +1,3 @@
-// com.example.lifetracker.services.EventParticipantService.java
 package com.example.lifetracker.services;
 
 import com.example.lifetracker.DTOs.ParticipantResponseDTO;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -35,43 +33,48 @@ public class EventParticipantService {
         this.userRepository = userRepository;
     }
 
-    public List<UserSearchResponseDTO> searchUsers(String query) {
-        if (query == null || query.trim().length() < 2) {
-            return List.of();
+    public List<ParticipantResponseDTO> getEventParticipants(Integer eventId) {
+        Integer currentUserId = SecurityUtils.getCurrentUserId();
+
+        boolean isOwner = eventRepository.getById(eventId, currentUserId).isPresent();
+        boolean isParticipant = participantRepository.getByEventIdAndUserId(eventId, currentUserId).isPresent();
+
+        if (!isOwner && !isParticipant) {
+            throw new NotFoundException("Event not found or you don't have permission");
         }
 
-        return userRepository.searchUsers(query.trim()).stream()
-                .map(user -> new UserSearchResponseDTO(
-                        user.getId(),
-                        user.getName(),
-                        user.getEmail()
-                ))
-                .collect(Collectors.toList());
+        return participantRepository.getByEventId(eventId)
+                .stream()
+                .map(participant -> {
+                    User user = userRepository.findById(participant.getUserId())
+                            .orElseThrow(() -> new NotFoundException("User not found"));
+                    User invitedBy = userRepository.findById(participant.getInvitedBy())
+                            .orElseThrow(() -> new NotFoundException("Inviter not found"));
+                    return toResponseDTO(participant, user, invitedBy);
+                })
+                .toList();
     }
 
     public ParticipantResponseDTO addParticipant(Integer eventId, Integer userIdToInvite) {
         Integer currentUserId = SecurityUtils.getCurrentUserId();
 
-        // Don't allow inviting yourself
         if (currentUserId.equals(userIdToInvite)) {
             throw new BadRequestException("You cannot invite yourself to an event");
         }
 
-        // Check if event exists and user has access (is owner)
         eventRepository.getById(eventId, currentUserId)
                 .orElseThrow(() -> new NotFoundException("Event not found or you don't have permission"));
 
-        // Check if user exists
         User userToInvite = userRepository.findById(userIdToInvite)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        // Check if already a participant
         if (participantRepository.getByEventIdAndUserId(eventId, userIdToInvite).isPresent()) {
             throw new BadRequestException("User is already a participant");
         }
 
-        EventParticipant participant = new EventParticipant(eventId, userIdToInvite, currentUserId);
-        EventParticipant saved = participantRepository.save(participant);
+        EventParticipant saved = participantRepository.save(
+                new EventParticipant(eventId, userIdToInvite, currentUserId)
+        );
 
         User currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new NotFoundException("Current user not found"));
@@ -88,23 +91,35 @@ public class EventParticipantService {
         participantRepository.deleteByEventIdAndUserId(eventId, userId);
     }
 
-    public List<ParticipantResponseDTO> getEventParticipants(Integer eventId) {
+    public List<UserSearchResponseDTO> searchUsersToInvite(Integer eventId, String query) {
         Integer currentUserId = SecurityUtils.getCurrentUserId();
 
         eventRepository.getById(eventId, currentUserId)
                 .orElseThrow(() -> new NotFoundException("Event not found or you don't have permission"));
 
-        List<EventParticipant> participants = participantRepository.getByEventId(eventId);
+        if (query == null || query.trim().length() < 2) {
+            return List.of();
+        }
 
-        return participants.stream()
-                .map(participant -> {
-                    User user = userRepository.findById(participant.getUserId())
-                            .orElseThrow(() -> new NotFoundException("User not found"));
-                    User invitedBy = userRepository.findById(participant.getInvitedBy())
-                            .orElseThrow(() -> new NotFoundException("Inviter not found"));
-                    return toResponseDTO(participant, user, invitedBy);
-                })
-                .collect(Collectors.toList());
+        return userRepository.searchUsers(query.trim())
+                .stream()
+                .map(user -> new UserSearchResponseDTO(
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail()
+                ))
+                .toList();
+    }
+
+    public List<Integer> getParticipatedEventIds(Integer userId) {
+        return participantRepository.getEventsByUserId(userId)
+                .stream()
+                .map(EventParticipant::getEventId)
+                .toList();
+    }
+
+    public void deleteAllByEventId(Integer eventId) {
+        participantRepository.deleteByEventId(eventId);
     }
 
     private ParticipantResponseDTO toResponseDTO(EventParticipant participant, User user, User invitedBy) {

@@ -6,6 +6,7 @@ import java.util.List;
 
 public record EventResponseDTO(
         Integer id,
+        Integer ownerId,
         String title,
         String description,
         String location,

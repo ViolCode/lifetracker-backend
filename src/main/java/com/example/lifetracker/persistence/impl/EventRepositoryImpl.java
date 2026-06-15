@@ -44,6 +44,11 @@ public class EventRepositoryImpl implements EventRepository {
     }
 
     @Override
+    public Optional<Event> findById(int id) {
+        return jpa.findById(id).map(mapper::toDomain);
+    }
+
+    @Override
     public Event save(Event event, Integer ownerId) {
         EventEntity entity = mapper.toEntity(event);
         entity.setOwnerId(ownerId);

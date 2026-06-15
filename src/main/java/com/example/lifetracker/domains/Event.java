@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 public class Event {
     private final Integer id;
+    private final Integer ownerId;
     private String title;
     private String description;
     private String location;
@@ -34,6 +35,7 @@ public class Event {
         validate(title, plannedDate, startTime, endTime);
 
         this.id = id;
+        this.ownerId = null;
         this.title = title;
         this.description = description;
         this.location = location;
@@ -51,11 +53,13 @@ public class Event {
             String location,
             LocalDate plannedDate,
             LocalTime startTime,
-            LocalTime endTime
+            LocalTime endTime,
+            Integer ownerId
     ) {
         validate(title, plannedDate, startTime, endTime);
 
         this.id = id;
+        this.ownerId = ownerId;
         this.title = title;
         this.description = description;
         this.location = location;
@@ -64,6 +68,18 @@ public class Event {
         this.endTime = endTime;
         this.plannedBudget = null;
         this.participantIds = new ArrayList<>();
+    }
+
+    public Event(
+            Integer id,
+            String title,
+            String description,
+            String location,
+            LocalDate plannedDate,
+            LocalTime startTime,
+            LocalTime endTime
+    ) {
+        this(id, title, description, location, plannedDate, startTime, endTime, (Integer) null);
     }
 
     public Event(

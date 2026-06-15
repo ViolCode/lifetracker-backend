@@ -4,15 +4,13 @@ import com.example.lifetracker.DTOs.EventWithParticipantsDTO;
 import com.example.lifetracker.DTOs.ParticipantResponseDTO;
 import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.exceptions.NotFoundException;
-import com.example.lifetracker.persistence.EventParticipantRepository;
 import com.example.lifetracker.persistence.EventRepository;
 import com.example.lifetracker.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -20,16 +18,13 @@ public class EventService {
 
     private final EventRepository repository;
     private final EventParticipantService participantService;
-    private final EventParticipantRepository participantRepository; // Add this
 
     public EventService(
             EventRepository repository,
-            EventParticipantService participantService,
-            EventParticipantRepository participantRepository  // Add this parameter
+            EventParticipantService participantService
     ) {
         this.repository = repository;
         this.participantService = participantService;
-        this.participantRepository = participantRepository;  // Add this
     }
 
     public List<Event> getAll() {
@@ -37,20 +32,15 @@ public class EventService {
 
         List<Event> ownedEvents = repository.getAll(userId);
 
-        // Fix: Use getEventsByUserId method
-        List<Event> participatedEvents = participantRepository.getEventsByUserId(userId)
+        List<Event> participatedEvents = participantService.getParticipatedEventIds(userId)
                 .stream()
-                .map(participant -> repository.getById(participant.getEventId(), participant.getEventId())
+                .map(eventId -> repository.findById(eventId)
                         .orElseThrow(() -> new NotFoundException("Event not found")))
                 .toList();
 
-        List<Event> allEvents = new ArrayList<>();
-        allEvents.addAll(ownedEvents);
-        allEvents.addAll(participatedEvents);
-
-        return allEvents.stream()
+        return Stream.concat(ownedEvents.stream(), participatedEvents.stream())
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Event getById(int id) {
@@ -88,8 +78,7 @@ public class EventService {
         repository.getById(id, userId)
                 .orElseThrow(() -> new NotFoundException("Event not found"));
 
-        // Also delete all participants when event is deleted
-        participantRepository.deleteByEventId(id);
+        participantService.deleteAllByEventId(id);
         repository.delete(id);
     }
 

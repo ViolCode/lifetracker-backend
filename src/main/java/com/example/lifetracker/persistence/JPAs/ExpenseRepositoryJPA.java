@@ -19,6 +19,8 @@ public interface ExpenseRepositoryJPA
             Integer userId
     );
 
+    List<ExpenseEntity> findByEventId(Integer eventId);
+
     @Query("""
         SELECT COALESCE(SUM(e.amount), 0)
         FROM ExpenseEntity e
@@ -29,4 +31,11 @@ public interface ExpenseRepositoryJPA
             @Param("eventId") Integer eventId,
             @Param("userId") Integer userId
     );
+
+    @Query("""
+        SELECT COALESCE(SUM(e.amount), 0)
+        FROM ExpenseEntity e
+        WHERE e.eventId = :eventId
+    """)
+    Double getTotalByEventAllUsers(@Param("eventId") Integer eventId);
 }
