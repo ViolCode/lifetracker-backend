@@ -1,7 +1,8 @@
-package com.example.lifetracker.security;
+package com.example.lifetracker.services;
 
 import com.example.lifetracker.persistence.UserRepository;
 
+import com.example.lifetracker.security.UserPrincipal;
 import org.springframework.security.core.userdetails
         .UserDetails;
 
