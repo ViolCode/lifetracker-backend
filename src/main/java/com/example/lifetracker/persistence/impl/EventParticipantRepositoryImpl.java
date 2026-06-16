@@ -35,13 +35,6 @@ public class EventParticipantRepositoryImpl implements EventParticipantRepositor
     }
 
     @Override
-    public List<EventParticipant> getByUserId(Integer userId) {
-        return jpa.findByUserId(userId).stream()
-                .map(mapper::toDomain)
-                .toList();
-    }
-
-    @Override
     public Optional<EventParticipant> getByEventIdAndUserId(Integer eventId, Integer userId) {
         return jpa.findByEventIdAndUserId(eventId, userId)
                 .map(mapper::toDomain);

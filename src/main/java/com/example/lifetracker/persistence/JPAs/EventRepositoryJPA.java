@@ -7,10 +7,6 @@ import java.util.List;
 
 public interface EventRepositoryJPA extends JpaRepository<EventEntity, Integer> {
 
-    List<EventEntity> findByPlannedDateBefore(
-            LocalDate date
-    );
-
     List<EventEntity> findByOwnerId(
             Integer ownerId
     );

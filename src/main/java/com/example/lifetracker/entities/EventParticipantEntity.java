@@ -1,4 +1,3 @@
-// com.example.lifetracker.entities.EventParticipantEntity.java
 package com.example.lifetracker.entities;
 
 import jakarta.persistence.*;
