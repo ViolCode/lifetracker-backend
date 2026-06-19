@@ -14,6 +14,7 @@ import com.example.lifetracker.security.UserPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +32,7 @@ class EventParticipantServiceTest {
     private EventParticipantRepository participantRepository;
     private EventRepository eventRepository;
     private UserRepository userRepository;
+    private SimpMessagingTemplate messagingTemplate;
     private EventParticipantService service;
 
     private final User currentUser = new User(1, "owner@test.com", "password", "Owner", false);
@@ -44,7 +46,8 @@ class EventParticipantServiceTest {
         participantRepository = mock(EventParticipantRepository.class);
         eventRepository = mock(EventRepository.class);
         userRepository = mock(UserRepository.class);
-        service = new EventParticipantService(participantRepository, eventRepository, userRepository);
+        messagingTemplate = mock(SimpMessagingTemplate.class);
+        service = new EventParticipantService(participantRepository, eventRepository, userRepository, messagingTemplate);
 
         UserPrincipal principal = new UserPrincipal(currentUser);
         Authentication authentication = mock(Authentication.class);
@@ -125,6 +128,7 @@ class EventParticipantServiceTest {
     @Test
     void removeParticipant_removesSuccessfully() {
         when(eventRepository.getById(1, 1)).thenReturn(Optional.of(sampleEvent));
+        when(userRepository.findById(2)).thenReturn(Optional.of(otherUser));
 
         service.removeParticipant(1, 2);
 
