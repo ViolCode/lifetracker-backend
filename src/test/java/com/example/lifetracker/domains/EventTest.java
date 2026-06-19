@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EventTest {
 
+    private static final LocalDate FIXED_DATE = LocalDate.of(2024, 1, 15);
+
     @Test
     void shouldCreateValidEvent() {
 
@@ -15,7 +17,7 @@ class EventTest {
                 "Gym",
                 "Workout",
                 "Eindhoven",
-                LocalDate.now(),
+                FIXED_DATE,
                 LocalTime.of(10, 0),
                 LocalTime.of(11, 0)
         );
@@ -29,14 +31,7 @@ class EventTest {
         ValidationException exception =
                 assertThrows(
                         ValidationException.class,
-                        () -> new Event(
-                                "",
-                                "desc",
-                                "loc",
-                                LocalDate.now(),
-                                null,
-                                null
-                        )
+                        () -> new Event("", "desc", "loc", FIXED_DATE, null, null)
                 );
 
         assertEquals(
@@ -50,14 +45,7 @@ class EventTest {
 
         assertThrows(
                 ValidationException.class,
-                () -> new Event(
-                        "Gym",
-                        "desc",
-                        "loc",
-                        null,
-                        null,
-                        null
-                )
+                () -> new Event("Gym", "desc", "loc", null, null, null)
         );
     }
 
@@ -67,14 +55,7 @@ class EventTest {
         ValidationException exception =
                 assertThrows(
                         ValidationException.class,
-                        () -> new Event(
-                                "Gym",
-                                "desc",
-                                "loc",
-                                LocalDate.now(),
-                                LocalTime.of(15, 0),
-                                LocalTime.of(14, 0)
-                        )
+                        () -> new Event("Gym", "desc", "loc", FIXED_DATE, LocalTime.of(15, 0), LocalTime.of(14, 0))
                 );
 
         assertEquals(
@@ -90,7 +71,7 @@ class EventTest {
                 "Old",
                 "desc",
                 "loc",
-                LocalDate.now(),
+                FIXED_DATE,
                 null,
                 null
         );
@@ -99,7 +80,7 @@ class EventTest {
                 "New",
                 "new desc",
                 "Amsterdam",
-                LocalDate.now().plusDays(1),
+                FIXED_DATE.plusDays(1),
                 LocalTime.of(10, 0),
                 LocalTime.of(11, 0)
         );
@@ -113,14 +94,7 @@ class EventTest {
 
         assertThrows(
                 ValidationException.class,
-                () -> new Event(
-                        "   ",
-                        "desc",
-                        "loc",
-                        LocalDate.now(),
-                        null,
-                        null
-                )
+                () -> new Event("   ", "desc", "loc", FIXED_DATE, null, null)
         );
     }
 
@@ -131,21 +105,14 @@ class EventTest {
                 "Old",
                 "desc",
                 "loc",
-                LocalDate.now(),
+                FIXED_DATE,
                 null,
                 null
         );
 
         assertThrows(
                 ValidationException.class,
-                () -> event.update(
-                        "",
-                        "desc",
-                        "loc",
-                        LocalDate.now(),
-                        null,
-                        null
-                )
+                () -> event.update("", "desc", "loc", FIXED_DATE, null, null)
         );
     }
 
@@ -156,21 +123,14 @@ class EventTest {
                 "Old",
                 "desc",
                 "loc",
-                LocalDate.now(),
+                FIXED_DATE,
                 null,
                 null
         );
 
         assertThrows(
                 ValidationException.class,
-                () -> event.update(
-                        "New",
-                        "desc",
-                        "loc",
-                        LocalDate.now(),
-                        LocalTime.of(15, 0),
-                        LocalTime.of(14, 0)
-                )
+                () -> event.update("New", "desc", "loc", FIXED_DATE, LocalTime.of(15, 0), LocalTime.of(14, 0))
         );
     }
 
@@ -181,7 +141,7 @@ class EventTest {
                 "Gym",
                 "desc",
                 "loc",
-                LocalDate.now(),
+                FIXED_DATE,
                 LocalTime.of(10, 0),
                 LocalTime.of(10, 0)
         );
