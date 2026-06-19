@@ -1,7 +1,9 @@
 package com.example.lifetracker.services;
 
+import com.example.lifetracker.DTOs.ParticipantNotificationDTO;
 import com.example.lifetracker.DTOs.ParticipantResponseDTO;
 import com.example.lifetracker.DTOs.UserSearchResponseDTO;
+import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.domains.EventParticipant;
 import com.example.lifetracker.domains.User;
 import com.example.lifetracker.exceptions.BadRequestException;
@@ -10,6 +12,7 @@ import com.example.lifetracker.persistence.EventParticipantRepository;
 import com.example.lifetracker.persistence.EventRepository;
 import com.example.lifetracker.persistence.UserRepository;
 import com.example.lifetracker.security.SecurityUtils;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,15 +25,18 @@ public class EventParticipantService {
     private final EventParticipantRepository participantRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public EventParticipantService(
             EventParticipantRepository participantRepository,
             EventRepository eventRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            SimpMessagingTemplate messagingTemplate
     ) {
         this.participantRepository = participantRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
     public List<ParticipantResponseDTO> getEventParticipants(Integer eventId) {
@@ -62,7 +68,7 @@ public class EventParticipantService {
             throw new BadRequestException("You cannot invite yourself to an event");
         }
 
-        eventRepository.getById(eventId, currentUserId)
+        Event event = eventRepository.getById(eventId, currentUserId)
                 .orElseThrow(() -> new NotFoundException("Event not found or you don't have permission"));
 
         User userToInvite = userRepository.findById(userIdToInvite)
@@ -79,16 +85,23 @@ public class EventParticipantService {
         User currentUser = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new NotFoundException("Current user not found"));
 
+        notifyParticipantAdded(event, userToInvite);
+
         return toResponseDTO(saved, userToInvite, currentUser);
     }
 
     public void removeParticipant(Integer eventId, Integer userId) {
         Integer currentUserId = SecurityUtils.getCurrentUserId();
 
-        eventRepository.getById(eventId, currentUserId)
+        Event event = eventRepository.getById(eventId, currentUserId)
                 .orElseThrow(() -> new NotFoundException("Event not found or you don't have permission"));
 
+        User removedUser = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
         participantRepository.deleteByEventIdAndUserId(eventId, userId);
+
+        notifyParticipantRemoved(event, removedUser);
     }
 
     public List<UserSearchResponseDTO> searchUsersToInvite(Integer eventId, String query) {
@@ -120,6 +133,20 @@ public class EventParticipantService {
 
     public void deleteAllByEventId(Integer eventId) {
         participantRepository.deleteByEventId(eventId);
+    }
+
+    private void notifyParticipantAdded(Event event, User newParticipant) {
+        messagingTemplate.convertAndSend(
+                "/topic/notifications." + event.getOwnerId(),
+                new ParticipantNotificationDTO(event.getTitle(), newParticipant.getName())
+        );
+    }
+
+    private void notifyParticipantRemoved(Event event, User removedParticipant) {
+        messagingTemplate.convertAndSend(
+                "/topic/notifications." + event.getOwnerId(),
+                new ParticipantNotificationDTO(event.getTitle(), removedParticipant.getName(), true)
+        );
     }
 
     private ParticipantResponseDTO toResponseDTO(EventParticipant participant, User user, User invitedBy) {
