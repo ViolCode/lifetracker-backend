@@ -7,6 +7,7 @@ import com.example.lifetracker.exceptions.NotFoundException;
 import com.example.lifetracker.persistence.EventParticipantRepository;
 import com.example.lifetracker.persistence.EventRepository;
 import com.example.lifetracker.persistence.ExpenseRepository;
+import com.example.lifetracker.persistence.UserRepository;
 import com.example.lifetracker.security.UserPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,7 @@ class ExpenseServiceTest {
     private ExpenseRepository repository;
     private EventRepository eventRepository;
     private EventParticipantRepository participantRepository;
+    private UserRepository userRepository;
     private ExpenseService service;
 
     @BeforeEach
@@ -34,11 +36,13 @@ class ExpenseServiceTest {
         repository = mock(ExpenseRepository.class);
         eventRepository = mock(EventRepository.class);
         participantRepository = mock(EventParticipantRepository.class);
+        userRepository = mock(UserRepository.class);
 
         service = new ExpenseService(
                 repository,
                 eventRepository,
-                participantRepository
+                participantRepository,
+                userRepository
         );
 
         User user = new User(
