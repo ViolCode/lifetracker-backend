@@ -1,4 +1,4 @@
-image: gradle:9.3.1-jdk21
+image: gradle:9.3.1-jdk21 
 
 variables:
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
