@@ -63,6 +63,14 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     }
 
     @Override
+    public List<Expense> getAllByEvent(int eventId) {
+        return jpa.findByEventId(eventId)
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public Double getTotalByEvent(
             int eventId,
             Integer userId
@@ -72,6 +80,11 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
                 eventId,
                 userId
         );
+    }
+
+    @Override
+    public Double getTotalByEventAllUsers(int eventId) {
+        return jpa.getTotalByEventAllUsers(eventId);
     }
 
     @Override

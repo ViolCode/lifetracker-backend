@@ -7,6 +7,7 @@ import com.example.lifetracker.security.UserPrincipal;
 import com.example.lifetracker.services.AuthService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -57,5 +58,11 @@ public class AuthController {
                 principal.getUser().getEmail(),
                 principal.getUser().getName()
         );
+    }
+
+    @PostMapping("/logout")
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        SecurityContextHolder.clearContext();
+        request.getSession().invalidate();
     }
 }

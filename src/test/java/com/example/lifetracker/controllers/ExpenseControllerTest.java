@@ -87,7 +87,8 @@ class ExpenseControllerTest {
                 LocalDate.now(),
                 49.99,
                 "Dinner",
-                sampleExpense.getCreatedAt()
+                sampleExpense.getCreatedAt(),
+                "Test User"
         );
 
         sampleRequest = new ExpenseRequestDTO(
@@ -109,7 +110,10 @@ class ExpenseControllerTest {
         when(service.getEventForExpense(sampleExpense))
                 .thenReturn(sampleEvent);
 
-        when(mapper.toDTO(sampleExpense, sampleEvent))
+        when(service.getUserNameForExpense(sampleExpense))
+                .thenReturn("Test User");
+
+        when(mapper.toDTO(sampleExpense, sampleEvent, "Test User"))
                 .thenReturn(sampleResponse);
 
         mockMvc.perform(post("/expenses")
@@ -130,7 +134,10 @@ class ExpenseControllerTest {
         when(service.getEventForExpense(sampleExpense))
                 .thenReturn(sampleEvent);
 
-        when(mapper.toDTO(sampleExpense, sampleEvent))
+        when(service.getUserNameForExpense(sampleExpense))
+                .thenReturn("Test User");
+
+        when(mapper.toDTO(sampleExpense, sampleEvent, "Test User"))
                 .thenReturn(sampleResponse);
 
         mockMvc.perform(get("/expenses"))
@@ -160,7 +167,10 @@ class ExpenseControllerTest {
         when(service.getEventForExpense(sampleExpense))
                 .thenReturn(sampleEvent);
 
-        when(mapper.toDTO(sampleExpense, sampleEvent))
+        when(service.getUserNameForExpense(sampleExpense))
+                .thenReturn("Test User");
+
+        when(mapper.toDTO(sampleExpense, sampleEvent, "Test User"))
                 .thenReturn(sampleResponse);
 
         mockMvc.perform(get("/expenses/event/10"))

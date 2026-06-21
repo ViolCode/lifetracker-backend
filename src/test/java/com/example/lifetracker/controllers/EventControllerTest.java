@@ -2,6 +2,7 @@ package com.example.lifetracker.controllers;
 
 import com.example.lifetracker.DTOs.EventRequestDTO;
 import com.example.lifetracker.DTOs.EventResponseDTO;
+import com.example.lifetracker.DTOs.EventWithParticipantsDTO;
 import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.exceptions.GlobalExceptionHandler;
 import com.example.lifetracker.exceptions.NotFoundException;
@@ -82,13 +83,16 @@ class EventControllerTest {
 
         sampleResponse = new EventResponseDTO(
                 1,
+                1,
                 "Gym",
                 "Workout session",
                 "Eindhoven",
                 LocalDate.of(2026, 5, 11),
                 LocalTime.of(10, 0),
                 LocalTime.of(12, 0),
-                25.50
+                25.50,
+                null,
+                List.of()
         );
     }
 
@@ -101,7 +105,7 @@ class EventControllerTest {
         when(expenseService.getTotalByEvent(1))
                 .thenReturn(25.50);
 
-        when(mapper.toDTO(sampleEvent, 25.50))
+        when(mapper.toDTO(sampleEvent, 25.50, null))
                 .thenReturn(sampleResponse);
 
         mockMvc.perform(get("/events"))
@@ -126,13 +130,13 @@ class EventControllerTest {
     @Test
     void getById_returns200() throws Exception {
 
-        when(service.getById(1))
-                .thenReturn(sampleEvent);
+        when(service.getEventWithParticipants(1))
+                .thenReturn(new EventWithParticipantsDTO(sampleEvent, List.of()));
 
         when(expenseService.getTotalByEvent(1))
                 .thenReturn(25.50);
 
-        when(mapper.toDTO(sampleEvent, 25.50))
+        when(mapper.toDTO(sampleEvent, 25.50, List.of()))
                 .thenReturn(sampleResponse);
 
         mockMvc.perform(get("/events/1"))
@@ -144,7 +148,7 @@ class EventControllerTest {
     @Test
     void getById_returns404_whenEventDoesNotExist() throws Exception {
 
-        when(service.getById(999))
+        when(service.getEventWithParticipants(999))
                 .thenThrow(
                         new NotFoundException(
                                 "Event not found"
@@ -166,7 +170,7 @@ class EventControllerTest {
         when(expenseService.getTotalByEvent(1))
                 .thenReturn(25.50);
 
-        when(mapper.toDTO(sampleEvent, 25.50))
+        when(mapper.toDTO(sampleEvent, 25.50, null))
                 .thenReturn(sampleResponse);
 
         mockMvc.perform(get("/events/history"))
@@ -183,9 +187,10 @@ class EventControllerTest {
         when(service.create(sampleEvent))
                 .thenReturn(sampleEvent);
 
-        when(mapper.toDTO(sampleEvent, 0.0))
+        when(mapper.toDTO(sampleEvent, 0.0, null))
                 .thenReturn(
                         new EventResponseDTO(
+                                1,
                                 1,
                                 "Gym",
                                 "Workout session",
@@ -193,7 +198,9 @@ class EventControllerTest {
                                 LocalDate.of(2026, 5, 11),
                                 LocalTime.of(10, 0),
                                 LocalTime.of(12, 0),
-                                0.0
+                                0.0,
+                                null,
+                                List.of()
                         )
                 );
 
@@ -235,7 +242,7 @@ class EventControllerTest {
         when(expenseService.getTotalByEvent(1))
                 .thenReturn(25.50);
 
-        when(mapper.toDTO(sampleEvent, 25.50))
+        when(mapper.toDTO(sampleEvent, 25.50, null))
                 .thenReturn(sampleResponse);
 
         mockMvc.perform(put("/events/1")

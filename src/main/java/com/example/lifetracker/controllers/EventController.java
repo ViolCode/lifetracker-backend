@@ -7,6 +7,7 @@ import com.example.lifetracker.services.EventService;
 import com.example.lifetracker.services.ExpenseService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -29,55 +30,47 @@ public class EventController {
 
     @GetMapping
     public List<EventResponseDTO> getAll() {
-
         return service.getAll()
                 .stream()
                 .map(event ->
                         mapper.toDTO(
                                 event,
-                                expenseService.getTotalByEvent(event.getId())
+                                expenseService.getTotalByEvent(event.getId()),
+                                null
                         )
                 )
                 .toList();
     }
 
     @GetMapping("/{id}")
-    public EventResponseDTO getById(
-            @PathVariable int id
-    ) {
-
-        var event = service.getById(id);
+    public EventResponseDTO getById(@PathVariable int id) {
+        var eventWithParticipants = service.getEventWithParticipants(id);
 
         return mapper.toDTO(
-                event,
-                expenseService.getTotalByEvent(event.getId())
+                eventWithParticipants.event(),
+                expenseService.getTotalByEvent(eventWithParticipants.event().getId()),
+                eventWithParticipants.participants()
         );
     }
 
     @GetMapping("/history")
     public List<EventResponseDTO> getHistory() {
-
         return service.getPastEvents()
                 .stream()
                 .map(event ->
                         mapper.toDTO(
                                 event,
-                                expenseService.getTotalByEvent(event.getId())
+                                expenseService.getTotalByEvent(event.getId()),
+                                null
                         )
                 )
                 .toList();
     }
 
     @PostMapping
-    public EventResponseDTO create(
-            @Valid @RequestBody EventRequestDTO dto
-    ) {
-
-        var saved = service.create(
-                mapper.toDomain(dto)
-        );
-
-        return mapper.toDTO(saved, 0.0);
+    public EventResponseDTO create(@Valid @RequestBody EventRequestDTO dto) {
+        var saved = service.create(mapper.toDomain(dto));
+        return mapper.toDTO(saved, 0.0, null);
     }
 
     @PutMapping("/{id}")
@@ -85,22 +78,16 @@ public class EventController {
             @PathVariable int id,
             @Valid @RequestBody EventRequestDTO dto
     ) {
-
-        var updated = service.update(
-                id,
-                mapper.toDomain(dto)
-        );
-
+        var updated = service.update(id, mapper.toDomain(dto));
         return mapper.toDTO(
                 updated,
-                expenseService.getTotalByEvent(updated.getId())
+                expenseService.getTotalByEvent(updated.getId()),
+                null
         );
     }
 
     @DeleteMapping("/{id}")
-    public void delete(
-            @PathVariable int id
-    ) {
+    public void delete(@PathVariable int id) {
         service.delete(id);
     }
 }

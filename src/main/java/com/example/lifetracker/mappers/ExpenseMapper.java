@@ -46,8 +46,7 @@ public class ExpenseMapper {
         );
     }
 
-    public ExpenseResponseDTO toDTO(Expense expense, Event event)
-    {
+    public ExpenseResponseDTO toDTO(Expense expense, Event event, String addedByName) {
         return new ExpenseResponseDTO(
                 expense.getId(),
                 expense.getEventId(),
@@ -55,7 +54,8 @@ public class ExpenseMapper {
                 event.getPlannedDate(),
                 expense.getAmount(),
                 expense.getDescription(),
-                expense.getCreatedAt()
+                expense.getCreatedAt(),
+                addedByName
         );
     }
 }

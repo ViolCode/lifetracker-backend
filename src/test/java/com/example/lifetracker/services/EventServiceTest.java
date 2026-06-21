@@ -5,6 +5,7 @@ import com.example.lifetracker.domains.User;
 import com.example.lifetracker.exceptions.NotFoundException;
 import com.example.lifetracker.persistence.EventRepository;
 import com.example.lifetracker.security.UserPrincipal;
+import com.example.lifetracker.services.EventParticipantService;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -15,17 +16,20 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 class EventServiceTest {
 
     private EventRepository repository;
+    private EventParticipantService participantService;
     private EventService service;
 
     @BeforeEach
     void setUp() {
         repository = mock(EventRepository.class);
-        service = new EventService(repository);
+        participantService = mock(EventParticipantService.class);
+        service = new EventService(repository, participantService);
 
         User user = new User(
                 1,
@@ -61,6 +65,7 @@ class EventServiceTest {
         );
 
         when(repository.getAll(1)).thenReturn(List.of(event));
+        when(participantService.getParticipatedEventIds(1)).thenReturn(List.of());
         List<Event> result = service.getAll();
         assertEquals(1, result.size());
         verify(repository).getAll(1);

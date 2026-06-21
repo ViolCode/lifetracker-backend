@@ -19,10 +19,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import com.example.lifetracker.exceptions.ConflictException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.security.authentication.BadCredentialsException;
 
 @ExtendWith(MockitoExtension.class)
 class AuthControllerTest {
@@ -157,5 +159,55 @@ class AuthControllerTest {
                         .content(objectMapper.writeValueAsString(request))
                 )
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void registerReturns409WhenEmailAlreadyExists() throws Exception {
+
+        when(authService.register(any(), any(), any()))
+                .thenThrow(new ConflictException("Email already exists"));
+
+        RegisterRequestDTO request =
+                new RegisterRequestDTO(
+                        "test@test.com",
+                        "password123",
+                        "John"
+                );
+
+        mockMvc.perform(
+                        post("/auth/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request))
+                )
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("Email already exists"));
+    }
+
+    @Test
+    void loginReturns401WhenCredentialsAreInvalid() throws Exception {
+
+        when(authenticationManager.authenticate(any()))
+                .thenThrow(new BadCredentialsException("Bad credentials"));
+
+        LoginRequestDTO request =
+                new LoginRequestDTO(
+                        "test@test.com",
+                        "wrongpassword"
+                );
+
+        mockMvc.perform(
+                        post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request))
+                )
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("Wrong email or password."));
+    }
+
+    @Test
+    void logoutReturns200() throws Exception {
+
+        mockMvc.perform(post("/auth/logout"))
+                .andExpect(status().isOk());
     }
 }

@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface EventRepository {
     List<Event> getAll(Integer ownerId);
     Optional<Event> getById(int id, Integer ownerId);
+    Optional<Event> findById(int id);
     Event save(Event event, Integer ownerId);
     void delete(int id);
     List<Event> getPastEvents(Integer ownerId);

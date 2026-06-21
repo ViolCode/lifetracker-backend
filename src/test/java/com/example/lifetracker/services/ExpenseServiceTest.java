@@ -4,8 +4,10 @@ import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.domains.Expense;
 import com.example.lifetracker.domains.User;
 import com.example.lifetracker.exceptions.NotFoundException;
+import com.example.lifetracker.persistence.EventParticipantRepository;
 import com.example.lifetracker.persistence.EventRepository;
 import com.example.lifetracker.persistence.ExpenseRepository;
+import com.example.lifetracker.persistence.UserRepository;
 import com.example.lifetracker.security.UserPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +26,8 @@ class ExpenseServiceTest {
 
     private ExpenseRepository repository;
     private EventRepository eventRepository;
+    private EventParticipantRepository participantRepository;
+    private UserRepository userRepository;
     private ExpenseService service;
 
     @BeforeEach
@@ -31,10 +35,14 @@ class ExpenseServiceTest {
 
         repository = mock(ExpenseRepository.class);
         eventRepository = mock(EventRepository.class);
+        participantRepository = mock(EventParticipantRepository.class);
+        userRepository = mock(UserRepository.class);
 
         service = new ExpenseService(
                 repository,
-                eventRepository
+                eventRepository,
+                participantRepository,
+                userRepository
         );
 
         User user = new User(
@@ -89,6 +97,9 @@ class ExpenseServiceTest {
         when(eventRepository.getById(1, 1))
                 .thenReturn(Optional.of(event));
 
+        when(participantRepository.getByEventIdAndUserId(1, 1))
+                .thenReturn(Optional.empty());
+
         when(repository.save(expense))
                 .thenReturn(expense);
 
@@ -110,6 +121,9 @@ class ExpenseServiceTest {
         );
 
         when(eventRepository.getById(999, 1))
+                .thenReturn(Optional.empty());
+
+        when(participantRepository.getByEventIdAndUserId(999, 1))
                 .thenReturn(Optional.empty());
 
         assertThrows(
@@ -146,7 +160,7 @@ class ExpenseServiceTest {
                 null
         );
 
-        when(eventRepository.getById(1, 1))
+        when(eventRepository.findById(1))
                 .thenReturn(Optional.of(event));
 
         Event result =
@@ -165,7 +179,7 @@ class ExpenseServiceTest {
                 "Food"
         );
 
-        when(eventRepository.getById(999, 1))
+        when(eventRepository.findById(999))
                 .thenReturn(Optional.empty());
 
         assertThrows(

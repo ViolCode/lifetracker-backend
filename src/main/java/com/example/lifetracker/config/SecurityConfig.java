@@ -42,7 +42,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/login",
-                                "/auth/register"
+                                "/auth/register",
+                                "/ws/**"
                         )
                         .permitAll()
 
@@ -54,6 +55,11 @@ public class SecurityConfig {
 
                 .logout(logout ->
                         logout.logoutUrl("/auth/logout")
+                                .logoutSuccessHandler((request, response, authentication) -> {
+                                    response.setStatus(200);
+                                    response.setContentType("application/json");
+                                    response.getWriter().write("{}");
+                                })
                 );
 
         return http.build();
