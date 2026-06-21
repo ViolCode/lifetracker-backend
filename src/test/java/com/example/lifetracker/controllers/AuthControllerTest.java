@@ -184,7 +184,7 @@ class AuthControllerTest {
     }
 
     @Test
-    void loginReturns500WhenCredentialsAreInvalid() throws Exception {
+    void loginReturns401WhenCredentialsAreInvalid() throws Exception {
 
         when(authenticationManager.authenticate(any()))
                 .thenThrow(new BadCredentialsException("Bad credentials"));
@@ -200,7 +200,8 @@ class AuthControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("Wrong email or password."));
     }
 
     @Test
