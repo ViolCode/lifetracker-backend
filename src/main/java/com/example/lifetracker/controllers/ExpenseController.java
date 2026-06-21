@@ -36,7 +36,8 @@ public class ExpenseController {
 
         return mapper.toDTO(
                 saved,
-                service.getEventForExpense(saved)
+                service.getEventForExpense(saved),
+                service.getUserNameForExpense(saved)
         );
     }
 
@@ -48,7 +49,8 @@ public class ExpenseController {
                 .map(expense ->
                         mapper.toDTO(
                                 expense,
-                                service.getEventForExpense(expense)
+                                service.getEventForExpense(expense),
+                                service.getUserNameForExpense(expense)
                         )
                 )
                 .toList();
@@ -64,7 +66,8 @@ public class ExpenseController {
                 .map(expense ->
                         mapper.toDTO(
                                 expense,
-                                service.getEventForExpense(expense)
+                                service.getEventForExpense(expense),
+                                service.getUserNameForExpense(expense)
                         )
                 )
                 .toList();

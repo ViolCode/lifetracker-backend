@@ -6,6 +6,7 @@ import com.example.lifetracker.exceptions.NotFoundException;
 import com.example.lifetracker.persistence.EventParticipantRepository;
 import com.example.lifetracker.persistence.EventRepository;
 import com.example.lifetracker.persistence.ExpenseRepository;
+import com.example.lifetracker.persistence.UserRepository;
 import com.example.lifetracker.security.SecurityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +20,18 @@ public class ExpenseService {
     private final ExpenseRepository repository;
     private final EventRepository eventRepository;
     private final EventParticipantRepository participantRepository;
+    private final UserRepository userRepository;
 
     public ExpenseService(
             ExpenseRepository repository,
             EventRepository eventRepository,
-            EventParticipantRepository participantRepository
+            EventParticipantRepository participantRepository,
+            UserRepository userRepository
     ) {
         this.repository = repository;
         this.eventRepository = eventRepository;
         this.participantRepository = participantRepository;
+        this.userRepository = userRepository;
     }
 
     public Expense create(Expense expense) {
@@ -65,5 +69,11 @@ public class ExpenseService {
         return eventRepository
                 .findById(expense.getEventId())
                 .orElseThrow(() -> new NotFoundException("Event not found"));
+    }
+
+    public String getUserNameForExpense(Expense expense) {
+        return userRepository.findById(expense.getUserId())
+                .map(user -> user.getName())
+                .orElse("Unknown");
     }
 }

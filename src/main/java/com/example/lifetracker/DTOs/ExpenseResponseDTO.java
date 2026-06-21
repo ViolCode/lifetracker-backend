@@ -10,6 +10,7 @@ public record ExpenseResponseDTO(
         LocalDate eventPlannedDate,
         Double amount,
         String description,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String addedByName
 ) {
 }

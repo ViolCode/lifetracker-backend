@@ -2,6 +2,7 @@ package com.example.lifetracker.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,6 +87,17 @@ public class GlobalExceptionHandler {
         return build(
                 HttpStatus.BAD_REQUEST,
                 message
+        );
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentials(
+            BadCredentialsException ex
+    ) {
+
+        return build(
+                HttpStatus.UNAUTHORIZED,
+                "Wrong email or password."
         );
     }
 
