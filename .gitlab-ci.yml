@@ -15,6 +15,7 @@ stages:
   - build
   - test
   - sonarqube
+  - deploy
 
 build:
   stage: build
@@ -45,10 +46,29 @@ sonarqube:
   stage: sonarqube
   tags:
     - docker-runner
+  allow_failure: true
   cache:
     policy: pull-push
     key: "sonar-cache-$CI_COMMIT_REF_SLUG"
     paths:
       - "${SONAR_USER_HOME}/cache"
-  script: gradle sonar
-  allow_failure: true
+  script:
+    - gradle sonar
+
+deploy:
+  stage: deploy
+  image: docker:latest
+  tags:
+    - docker-runner
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
+    - ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE:latest" .
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+    - ssh "$SSH_USER@$SSH_HOST" "docker pull $CI_REGISTRY_IMAGE:latest && docker stop lifetracker || true && docker rm lifetracker || true && docker run -d --name lifetracker --restart unless-stopped -p 8080:8080 $CI_REGISTRY_IMAGE:latest"
