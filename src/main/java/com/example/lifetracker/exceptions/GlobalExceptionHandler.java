@@ -12,7 +12,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private ResponseEntity<?> build(
+    private ResponseEntity<Object> build(
             HttpStatus status,
             String message
     ) {
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> handleNotFound(
+    public ResponseEntity<Object> handleNotFound(
             NotFoundException ex
     ) {
 
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<?> handleValidation(
+    public ResponseEntity<Object> handleValidation(
             ValidationException ex
     ) {
 
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<?> handleBadRequest(
+    public ResponseEntity<Object> handleBadRequest(
             BadRequestException ex
     ) {
 
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<?> handleConflict(
+    public ResponseEntity<Object> handleConflict(
             ConflictException ex
     ) {
 
@@ -71,7 +71,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleMethodArgumentNotValid(
+    public ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex
     ) {
 
@@ -91,7 +91,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> handleBadCredentials(
+    public ResponseEntity<Object> handleBadCredentials(
             BadCredentialsException ex
     ) {
 
@@ -102,7 +102,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGeneric(
+    public ResponseEntity<Object> handleGeneric(
             Exception ex
     ) {
 

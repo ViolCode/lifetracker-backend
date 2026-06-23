@@ -1,7 +1,7 @@
 package com.example.lifetracker.mappers;
 
-import com.example.lifetracker.DTOs.ExpenseRequestDTO;
-import com.example.lifetracker.DTOs.ExpenseResponseDTO;
+import com.example.lifetracker.dtos.ExpenseRequestDTO;
+import com.example.lifetracker.dtos.ExpenseResponseDTO;
 import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.domains.Expense;
 import com.example.lifetracker.entities.ExpenseEntity;

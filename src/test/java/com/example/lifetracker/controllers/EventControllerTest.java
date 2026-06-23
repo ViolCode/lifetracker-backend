@@ -1,8 +1,8 @@
 package com.example.lifetracker.controllers;
 
-import com.example.lifetracker.DTOs.EventRequestDTO;
-import com.example.lifetracker.DTOs.EventResponseDTO;
-import com.example.lifetracker.DTOs.EventWithParticipantsDTO;
+import com.example.lifetracker.dtos.EventRequestDTO;
+import com.example.lifetracker.dtos.EventResponseDTO;
+import com.example.lifetracker.dtos.EventWithParticipantsDTO;
 import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.exceptions.GlobalExceptionHandler;
 import com.example.lifetracker.exceptions.NotFoundException;

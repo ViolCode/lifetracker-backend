@@ -1,8 +1,8 @@
 package com.example.lifetracker.mappers;
 
-import com.example.lifetracker.DTOs.EventRequestDTO;
-import com.example.lifetracker.DTOs.EventResponseDTO;
-import com.example.lifetracker.DTOs.ParticipantResponseDTO;
+import com.example.lifetracker.dtos.EventRequestDTO;
+import com.example.lifetracker.dtos.EventResponseDTO;
+import com.example.lifetracker.dtos.ParticipantResponseDTO;
 import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.entities.EventEntity;
 import org.springframework.stereotype.Component;

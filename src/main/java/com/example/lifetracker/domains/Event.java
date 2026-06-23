@@ -29,31 +29,6 @@ public class Event {
             LocalDate plannedDate,
             LocalTime startTime,
             LocalTime endTime,
-            Double plannedBudget,
-            List<Integer> participantIds
-    ) {
-        validate(title, plannedDate, startTime, endTime);
-
-        this.id = id;
-        this.ownerId = null;
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.plannedDate = plannedDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.plannedBudget = plannedBudget;
-        this.participantIds = participantIds != null ? participantIds : new ArrayList<>();
-    }
-
-    public Event(
-            Integer id,
-            String title,
-            String description,
-            String location,
-            LocalDate plannedDate,
-            LocalTime startTime,
-            LocalTime endTime,
             Integer ownerId
     ) {
         validate(title, plannedDate, startTime, endTime);

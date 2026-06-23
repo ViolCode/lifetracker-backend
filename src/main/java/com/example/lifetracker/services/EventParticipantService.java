@@ -1,8 +1,8 @@
 package com.example.lifetracker.services;
 
-import com.example.lifetracker.DTOs.ParticipantNotificationDTO;
-import com.example.lifetracker.DTOs.ParticipantResponseDTO;
-import com.example.lifetracker.DTOs.UserSearchResponseDTO;
+import com.example.lifetracker.dtos.ParticipantNotificationDTO;
+import com.example.lifetracker.dtos.ParticipantResponseDTO;
+import com.example.lifetracker.dtos.UserSearchResponseDTO;
 import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.domains.EventParticipant;
 import com.example.lifetracker.domains.User;
@@ -21,6 +21,9 @@ import java.util.List;
 @Service
 @Transactional
 public class EventParticipantService {
+
+    private static final String EVENT_NOT_FOUND_OR_NO_PERMISSION = "Event not found or you don't have permission";
+    private static final String USER_NOT_FOUND = "User not found";
 
     private final EventParticipantRepository participantRepository;
     private final EventRepository eventRepository;
@@ -46,14 +49,14 @@ public class EventParticipantService {
         boolean isParticipant = participantRepository.getByEventIdAndUserId(eventId, currentUserId).isPresent();
 
         if (!isOwner && !isParticipant) {
-            throw new NotFoundException("Event not found or you don't have permission");
+            throw new NotFoundException(EVENT_NOT_FOUND_OR_NO_PERMISSION);
         }
 
         return participantRepository.getByEventId(eventId)
                 .stream()
                 .map(participant -> {
                     User user = userRepository.findById(participant.getUserId())
-                            .orElseThrow(() -> new NotFoundException("User not found"));
+                            .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
                     User invitedBy = userRepository.findById(participant.getInvitedBy())
                             .orElseThrow(() -> new NotFoundException("Inviter not found"));
                     return toResponseDTO(participant, user, invitedBy);
@@ -69,10 +72,10 @@ public class EventParticipantService {
         }
 
         Event event = eventRepository.getById(eventId, currentUserId)
-                .orElseThrow(() -> new NotFoundException("Event not found or you don't have permission"));
+                .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND_OR_NO_PERMISSION));
 
         User userToInvite = userRepository.findById(userIdToInvite)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         if (participantRepository.getByEventIdAndUserId(eventId, userIdToInvite).isPresent()) {
             throw new BadRequestException("User is already a participant");
@@ -94,10 +97,10 @@ public class EventParticipantService {
         Integer currentUserId = SecurityUtils.getCurrentUserId();
 
         Event event = eventRepository.getById(eventId, currentUserId)
-                .orElseThrow(() -> new NotFoundException("Event not found or you don't have permission"));
+                .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND_OR_NO_PERMISSION));
 
         User removedUser = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         participantRepository.deleteByEventIdAndUserId(eventId, userId);
 
@@ -108,7 +111,7 @@ public class EventParticipantService {
         Integer currentUserId = SecurityUtils.getCurrentUserId();
 
         eventRepository.getById(eventId, currentUserId)
-                .orElseThrow(() -> new NotFoundException("Event not found or you don't have permission"));
+                .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND_OR_NO_PERMISSION));
 
         if (query == null || query.trim().length() < 2) {
             return List.of();

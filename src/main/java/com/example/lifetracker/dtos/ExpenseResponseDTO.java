@@ -1,4 +1,4 @@
-package com.example.lifetracker.DTOs;
+package com.example.lifetracker.dtos;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

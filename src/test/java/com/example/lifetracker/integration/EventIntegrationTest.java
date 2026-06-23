@@ -1,7 +1,7 @@
 package com.example.lifetracker.integration;
 
-import com.example.lifetracker.DTOs.EventRequestDTO;
-import com.example.lifetracker.DTOs.RegisterRequestDTO;
+import com.example.lifetracker.dtos.EventRequestDTO;
+import com.example.lifetracker.dtos.RegisterRequestDTO;
 import com.example.lifetracker.entities.EventEntity;
 import com.example.lifetracker.entities.UserEntity;
 import com.example.lifetracker.persistence.JPAs.EventRepositoryJPA;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Transactional
-public class EventIntegrationTest {
+class EventIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

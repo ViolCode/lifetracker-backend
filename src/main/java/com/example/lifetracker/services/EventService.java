@@ -1,7 +1,7 @@
 package com.example.lifetracker.services;
 
-import com.example.lifetracker.DTOs.EventWithParticipantsDTO;
-import com.example.lifetracker.DTOs.ParticipantResponseDTO;
+import com.example.lifetracker.dtos.EventWithParticipantsDTO;
+import com.example.lifetracker.dtos.ParticipantResponseDTO;
 import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.exceptions.NotFoundException;
 import com.example.lifetracker.persistence.EventRepository;
@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 @Service
 @Transactional
 public class EventService {
+
+    private static final String EVENT_NOT_FOUND = "Event not found";
 
     private final EventRepository repository;
     private final EventParticipantService participantService;
@@ -35,7 +37,7 @@ public class EventService {
         List<Event> participatedEvents = participantService.getParticipatedEventIds(userId)
                 .stream()
                 .map(eventId -> repository.findById(eventId)
-                        .orElseThrow(() -> new NotFoundException("Event not found")))
+                        .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND)))
                 .toList();
 
         return Stream.concat(ownedEvents.stream(), participatedEvents.stream())
@@ -47,7 +49,7 @@ public class EventService {
         Integer userId = SecurityUtils.getCurrentUserId();
         return repository
                 .getById(id, userId)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
+                .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND));
     }
 
     public Event create(Event event) {
@@ -59,7 +61,7 @@ public class EventService {
         Integer userId = SecurityUtils.getCurrentUserId();
 
         Event existing = repository.getById(id, userId)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
+                .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND));
 
         existing.update(
                 updated.getTitle(),
@@ -76,7 +78,7 @@ public class EventService {
     public void delete(int id) {
         Integer userId = SecurityUtils.getCurrentUserId();
         repository.getById(id, userId)
-                .orElseThrow(() -> new NotFoundException("Event not found"));
+                .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND));
 
         participantService.deleteAllByEventId(id);
         repository.delete(id);

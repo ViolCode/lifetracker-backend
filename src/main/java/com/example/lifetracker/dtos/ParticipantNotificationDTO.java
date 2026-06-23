@@ -1,4 +1,4 @@
-package com.example.lifetracker.DTOs;
+package com.example.lifetracker.dtos;
 
 public record ParticipantNotificationDTO(
         String eventTitle,

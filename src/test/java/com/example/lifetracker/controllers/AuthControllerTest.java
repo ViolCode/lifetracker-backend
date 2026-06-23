@@ -1,7 +1,7 @@
 package com.example.lifetracker.controllers;
 
-import com.example.lifetracker.DTOs.LoginRequestDTO;
-import com.example.lifetracker.DTOs.RegisterRequestDTO;
+import com.example.lifetracker.dtos.LoginRequestDTO;
+import com.example.lifetracker.dtos.RegisterRequestDTO;
 import com.example.lifetracker.domains.User;
 import com.example.lifetracker.security.UserPrincipal;
 import com.example.lifetracker.services.AuthService;

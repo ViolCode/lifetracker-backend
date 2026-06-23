@@ -1,7 +1,7 @@
 package com.example.lifetracker.controllers;
 
-import com.example.lifetracker.DTOs.EventRequestDTO;
-import com.example.lifetracker.DTOs.EventResponseDTO;
+import com.example.lifetracker.dtos.EventRequestDTO;
+import com.example.lifetracker.dtos.EventResponseDTO;
 import com.example.lifetracker.mappers.EventMapper;
 import com.example.lifetracker.services.EventService;
 import com.example.lifetracker.services.ExpenseService;

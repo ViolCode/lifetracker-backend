@@ -1,8 +1,8 @@
 package com.example.lifetracker.controllers;
 
-import com.example.lifetracker.DTOs.ParticipantRequestDTO;
-import com.example.lifetracker.DTOs.ParticipantResponseDTO;
-import com.example.lifetracker.DTOs.UserSearchResponseDTO;
+import com.example.lifetracker.dtos.ParticipantRequestDTO;
+import com.example.lifetracker.dtos.ParticipantResponseDTO;
+import com.example.lifetracker.dtos.UserSearchResponseDTO;
 import com.example.lifetracker.services.EventParticipantService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;

@@ -1,7 +1,7 @@
 package com.example.lifetracker.services;
 
-import com.example.lifetracker.DTOs.ParticipantResponseDTO;
-import com.example.lifetracker.DTOs.UserSearchResponseDTO;
+import com.example.lifetracker.dtos.ParticipantResponseDTO;
+import com.example.lifetracker.dtos.UserSearchResponseDTO;
 import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.domains.EventParticipant;
 import com.example.lifetracker.domains.User;

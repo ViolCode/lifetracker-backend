@@ -1,8 +1,8 @@
 package com.example.lifetracker.controllers;
 
-import com.example.lifetracker.DTOs.ParticipantRequestDTO;
-import com.example.lifetracker.DTOs.ParticipantResponseDTO;
-import com.example.lifetracker.DTOs.UserSearchResponseDTO;
+import com.example.lifetracker.dtos.ParticipantRequestDTO;
+import com.example.lifetracker.dtos.ParticipantResponseDTO;
+import com.example.lifetracker.dtos.UserSearchResponseDTO;
 import com.example.lifetracker.exceptions.BadRequestException;
 import com.example.lifetracker.exceptions.GlobalExceptionHandler;
 import com.example.lifetracker.exceptions.NotFoundException;
@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;

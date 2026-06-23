@@ -1,4 +1,4 @@
-package com.example.lifetracker.DTOs;
+package com.example.lifetracker.dtos;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
