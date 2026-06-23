@@ -3,6 +3,7 @@ package com.example.lifetracker.domains;
 
 import lombok.Getter;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @Getter
 public class EventParticipant {
@@ -33,6 +34,6 @@ public class EventParticipant {
     }
 
     public EventParticipant(Integer eventId, Integer userId, Integer invitedBy) {
-        this(null, eventId, userId, false, invitedBy, LocalDateTime.now(), null);
+        this(null, eventId, userId, false, invitedBy, LocalDateTime.now(ZoneOffset.UTC), null);
     }
 }

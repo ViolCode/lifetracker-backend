@@ -4,11 +4,12 @@ import com.example.lifetracker.exceptions.ValidationException;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Month;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EventTest {
 
-    private static final LocalDate FIXED_DATE = LocalDate.of(2024, 1, 15);
+    private static final LocalDate FIXED_DATE = LocalDate.of(2024, Month.JANUARY, 15);
 
     @Test
     void shouldCreateValidEvent() {

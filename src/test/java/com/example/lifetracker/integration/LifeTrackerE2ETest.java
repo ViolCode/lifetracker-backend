@@ -8,6 +8,7 @@ import com.example.lifetracker.persistence.jpas.EventRepositoryJPA;
 import com.example.lifetracker.persistence.jpas.ExpenseRepositoryJPA;
 import com.example.lifetracker.persistence.jpas.UserRepositoryJPA;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.time.Month;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +62,7 @@ class LifeTrackerE2ETest {
 
         EventRequestDTO eventRequest = new EventRequestDTO(
                 "Team Dinner", "Annual team event", "Amsterdam",
-                LocalDate.of(2026, 12, 20), LocalTime.of(18, 0), LocalTime.of(22, 0)
+                LocalDate.of(2026, Month.DECEMBER, 20), LocalTime.of(18, 0), LocalTime.of(22, 0)
         );
 
         MvcResult createEventResult = mockMvc.perform(post("/events")

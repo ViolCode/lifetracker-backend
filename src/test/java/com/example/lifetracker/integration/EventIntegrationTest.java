@@ -7,6 +7,7 @@ import com.example.lifetracker.entities.UserEntity;
 import com.example.lifetracker.persistence.jpas.EventRepositoryJPA;
 import com.example.lifetracker.persistence.jpas.UserRepositoryJPA;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Month;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,7 +81,7 @@ class EventIntegrationTest {
                 "Birthday Party",
                 "Celebrating birthday",
                 "Amsterdam",
-                LocalDate.of(2026, 12, 15),
+                LocalDate.of(2026, Month.DECEMBER, 15),
                 LocalTime.of(19, 0),
                 LocalTime.of(23, 0)
         );
@@ -116,9 +117,9 @@ class EventIntegrationTest {
     @Test
     void testGetAllEvents() throws Exception {
         EventRequestDTO event1 = new EventRequestDTO("Event One", null, "Rotterdam",
-                LocalDate.of(2026, 11, 1), LocalTime.of(10, 0), LocalTime.of(12, 0));
+                LocalDate.of(2026, Month.NOVEMBER, 1), LocalTime.of(10, 0), LocalTime.of(12, 0));
         EventRequestDTO event2 = new EventRequestDTO("Event Two", null, "Utrecht",
-                LocalDate.of(2026, 11, 2), LocalTime.of(14, 0), LocalTime.of(16, 0));
+                LocalDate.of(2026, Month.NOVEMBER, 2), LocalTime.of(14, 0), LocalTime.of(16, 0));
 
         mockMvc.perform(post("/events")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -141,7 +142,7 @@ class EventIntegrationTest {
     @Test
     void testUpdateEvent() throws Exception {
         EventRequestDTO original = new EventRequestDTO("Original Title", "desc", "Den Haag",
-                LocalDate.of(2026, 10, 10), LocalTime.of(9, 0), LocalTime.of(11, 0));
+                LocalDate.of(2026, Month.OCTOBER, 10), LocalTime.of(9, 0), LocalTime.of(11, 0));
 
         MvcResult createResult = mockMvc.perform(post("/events")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -153,7 +154,7 @@ class EventIntegrationTest {
         Integer eventId = objectMapper.readTree(createResult.getResponse().getContentAsString()).get("id").asInt();
 
         EventRequestDTO updated = new EventRequestDTO("Updated Title", "new desc", "Eindhoven",
-                LocalDate.of(2026, 10, 15), LocalTime.of(10, 0), LocalTime.of(12, 0));
+                LocalDate.of(2026, Month.OCTOBER, 15), LocalTime.of(10, 0), LocalTime.of(12, 0));
 
         mockMvc.perform(put("/events/{id}", eventId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -171,7 +172,7 @@ class EventIntegrationTest {
     @Test
     void testDeleteEvent() throws Exception {
         EventRequestDTO eventRequest = new EventRequestDTO("To Be Deleted", null, "Breda",
-                LocalDate.of(2026, 9, 5), LocalTime.of(8, 0), LocalTime.of(9, 0));
+                LocalDate.of(2026, Month.SEPTEMBER, 5), LocalTime.of(8, 0), LocalTime.of(9, 0));
 
         MvcResult createResult = mockMvc.perform(post("/events")
                         .contentType(MediaType.APPLICATION_JSON)

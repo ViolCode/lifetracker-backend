@@ -5,6 +5,7 @@ import com.example.lifetracker.dtos.RegisterRequestDTO;
 import com.example.lifetracker.persistence.jpas.EventRepositoryJPA;
 import com.example.lifetracker.persistence.jpas.UserRepositoryJPA;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.time.Month;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +59,7 @@ class EventCreationE2ETest {
     void createEvent_withValidData_persistsAndReturnsEvent() throws Exception {
         EventRequestDTO request = new EventRequestDTO(
                 "Team Lunch", "Monthly team lunch", "Eindhoven",
-                LocalDate.of(2026, 12, 15), LocalTime.of(12, 0), LocalTime.of(13, 30)
+                LocalDate.of(2026, Month.DECEMBER, 15), LocalTime.of(12, 0), LocalTime.of(13, 30)
         );
 
         MvcResult result = mockMvc.perform(post("/events")
@@ -80,7 +81,7 @@ class EventCreationE2ETest {
     void createEvent_missingTitle_returns400() throws Exception {
         EventRequestDTO request = new EventRequestDTO(
                 "", "Some description", "Amsterdam",
-                LocalDate.of(2026, 11, 10), null, null
+                LocalDate.of(2026, Month.NOVEMBER, 10), null, null
         );
 
         mockMvc.perform(post("/events")
@@ -108,7 +109,7 @@ class EventCreationE2ETest {
     void createEvent_withoutAuthentication_returns403() throws Exception {
         EventRequestDTO request = new EventRequestDTO(
                 "Unauthorized Event", null, "Utrecht",
-                LocalDate.of(2026, 10, 5), null, null
+                LocalDate.of(2026, Month.OCTOBER, 5), null, null
         );
 
         mockMvc.perform(post("/events")
@@ -121,7 +122,7 @@ class EventCreationE2ETest {
     void createEvent_thenRetrieveById_returnsCorrectData() throws Exception {
         EventRequestDTO request = new EventRequestDTO(
                 "Annual Review", "Year-end review", "Den Haag",
-                LocalDate.of(2026, 12, 31), LocalTime.of(9, 0), LocalTime.of(17, 0)
+                LocalDate.of(2026, Month.DECEMBER, 31), LocalTime.of(9, 0), LocalTime.of(17, 0)
         );
 
         MvcResult createResult = mockMvc.perform(post("/events")
@@ -144,11 +145,11 @@ class EventCreationE2ETest {
     void createMultipleEvents_thenGetAll_returnsAll() throws Exception {
         EventRequestDTO event1 = new EventRequestDTO(
                 "Workshop", null, "Breda",
-                LocalDate.of(2026, 11, 5), LocalTime.of(10, 0), LocalTime.of(12, 0)
+                LocalDate.of(2026, Month.NOVEMBER, 5), LocalTime.of(10, 0), LocalTime.of(12, 0)
         );
         EventRequestDTO event2 = new EventRequestDTO(
                 "Conference", null, "Maastricht",
-                LocalDate.of(2026, 11, 20), LocalTime.of(9, 0), LocalTime.of(18, 0)
+                LocalDate.of(2026, Month.NOVEMBER, 20), LocalTime.of(9, 0), LocalTime.of(18, 0)
         );
 
         mockMvc.perform(post("/events")
@@ -172,7 +173,7 @@ class EventCreationE2ETest {
     void createEvent_thenUpdateIt_persistsChanges() throws Exception {
         EventRequestDTO original = new EventRequestDTO(
                 "Old Title", "Old desc", "Tilburg",
-                LocalDate.of(2026, 10, 10), LocalTime.of(8, 0), LocalTime.of(10, 0)
+                LocalDate.of(2026, Month.OCTOBER, 10), LocalTime.of(8, 0), LocalTime.of(10, 0)
         );
 
         MvcResult createResult = mockMvc.perform(post("/events")
@@ -186,7 +187,7 @@ class EventCreationE2ETest {
 
         EventRequestDTO updated = new EventRequestDTO(
                 "New Title", "New desc", "Nijmegen",
-                LocalDate.of(2026, 10, 20), LocalTime.of(9, 0), LocalTime.of(11, 0)
+                LocalDate.of(2026, Month.OCTOBER, 20), LocalTime.of(9, 0), LocalTime.of(11, 0)
         );
 
         mockMvc.perform(put("/events/{id}", eventId)
@@ -204,7 +205,7 @@ class EventCreationE2ETest {
     void createEvent_thenDeleteIt_removesFromDatabase() throws Exception {
         EventRequestDTO request = new EventRequestDTO(
                 "Temporary Event", null, "Groningen",
-                LocalDate.of(2026, 9, 1), null, null
+                LocalDate.of(2026, Month.SEPTEMBER, 1), null, null
         );
 
         MvcResult createResult = mockMvc.perform(post("/events")

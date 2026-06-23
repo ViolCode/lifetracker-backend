@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -67,7 +68,7 @@ class EventControllerTest {
                 "Gym",
                 "Workout session",
                 "Eindhoven",
-                LocalDate.of(2026, 5, 11),
+                LocalDate.of(2026, Month.MAY, 11),
                 LocalTime.of(10, 0),
                 LocalTime.of(12, 0)
         );
@@ -76,7 +77,7 @@ class EventControllerTest {
                 "Gym",
                 "Workout session",
                 "Eindhoven",
-                LocalDate.of(2026, 5, 11),
+                LocalDate.of(2026, Month.MAY, 11),
                 LocalTime.of(10, 0),
                 LocalTime.of(12, 0)
         );
@@ -87,7 +88,7 @@ class EventControllerTest {
                 "Gym",
                 "Workout session",
                 "Eindhoven",
-                LocalDate.of(2026, 5, 11),
+                LocalDate.of(2026, Month.MAY, 11),
                 LocalTime.of(10, 0),
                 LocalTime.of(12, 0),
                 25.50,
@@ -195,7 +196,7 @@ class EventControllerTest {
                                 "Gym",
                                 "Workout session",
                                 "Eindhoven",
-                                LocalDate.of(2026, 5, 11),
+                                LocalDate.of(2026, Month.MAY, 11),
                                 LocalTime.of(10, 0),
                                 LocalTime.of(12, 0),
                                 0.0,

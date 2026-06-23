@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,8 +38,11 @@ class EventParticipantServiceTest {
 
     private final User currentUser = new User(1, "owner@test.com", "password", "Owner", false);
     private final User otherUser = new User(2, "other@test.com", "password", "Other", false);
+    private static final LocalDate FIXED_DATE = LocalDate.of(2026, Month.JANUARY, 1);
+    private static final LocalDateTime FIXED_DATETIME = LocalDateTime.of(2026, Month.JANUARY, 1, 10, 0);
+
     private final Event sampleEvent = Event.builder()
-            .id(1).ownerId(1).title("Gym").description("").location("").plannedDate(LocalDate.now())
+            .id(1).ownerId(1).title("Gym").description("").location("").plannedDate(FIXED_DATE)
             .build();
 
     @BeforeEach
@@ -64,7 +68,7 @@ class EventParticipantServiceTest {
 
     @Test
     void getEventParticipants_returnsListWhenOwner() {
-        EventParticipant participant = new EventParticipant(1, 1, 2, false, 1, LocalDateTime.now(), null);
+        EventParticipant participant = new EventParticipant(1, 1, 2, false, 1, FIXED_DATETIME, null);
 
         when(eventRepository.getById(1, 1)).thenReturn(Optional.of(sampleEvent));
         when(participantRepository.getByEventIdAndUserId(1, 1)).thenReturn(Optional.empty());
@@ -88,7 +92,7 @@ class EventParticipantServiceTest {
 
     @Test
     void addParticipant_addsSuccessfully() {
-        EventParticipant saved = new EventParticipant(1, 1, 2, false, 1, LocalDateTime.now(), null);
+        EventParticipant saved = new EventParticipant(1, 1, 2, false, 1, FIXED_DATETIME, null);
 
         when(eventRepository.getById(1, 1)).thenReturn(Optional.of(sampleEvent));
         when(userRepository.findById(2)).thenReturn(Optional.of(otherUser));
@@ -116,7 +120,7 @@ class EventParticipantServiceTest {
 
     @Test
     void addParticipant_throwsWhenAlreadyParticipant() {
-        EventParticipant existing = new EventParticipant(1, 1, 2, false, 1, LocalDateTime.now(), null);
+        EventParticipant existing = new EventParticipant(1, 1, 2, false, 1, FIXED_DATETIME, null);
 
         when(eventRepository.getById(1, 1)).thenReturn(Optional.of(sampleEvent));
         when(userRepository.findById(2)).thenReturn(Optional.of(otherUser));
@@ -164,7 +168,7 @@ class EventParticipantServiceTest {
 
     @Test
     void getParticipatedEventIds_returnsList() {
-        EventParticipant p = new EventParticipant(1, 5, 1, false, 1, LocalDateTime.now(), null);
+        EventParticipant p = new EventParticipant(1, 5, 1, false, 1, FIXED_DATETIME, null);
         when(participantRepository.getEventsByUserId(1)).thenReturn(List.of(p));
 
         List<Integer> result = service.getParticipatedEventIds(1);
