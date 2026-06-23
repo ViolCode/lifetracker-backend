@@ -62,6 +62,8 @@ deploy:
     - docker-runner
   services:
     - docker:dind
+  variables:
+    CI_REGISTRY: "registry.your-university-domain.com" 
   before_script:
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
     - eval $(ssh-agent -s)
