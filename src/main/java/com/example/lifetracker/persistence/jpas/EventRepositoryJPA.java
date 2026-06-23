@@ -1,4 +1,4 @@
-package com.example.lifetracker.persistence.JPAs;
+package com.example.lifetracker.persistence.jpas;
 import com.example.lifetracker.entities.EventEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

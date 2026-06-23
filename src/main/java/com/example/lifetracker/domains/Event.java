@@ -21,26 +21,16 @@ public class Event {
     private List<Integer> participantIds;
     private Double plannedBudget;
 
-    public Event(
-            Integer id,
-            String title,
-            String description,
-            String location,
-            LocalDate plannedDate,
-            LocalTime startTime,
-            LocalTime endTime,
-            Integer ownerId
-    ) {
-        validate(title, plannedDate, startTime, endTime);
-
-        this.id = id;
-        this.ownerId = ownerId;
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.plannedDate = plannedDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
+    private Event(Builder builder) {
+        validate(builder.title, builder.plannedDate, builder.startTime, builder.endTime);
+        this.id = builder.id;
+        this.ownerId = builder.ownerId;
+        this.title = builder.title;
+        this.description = builder.description;
+        this.location = builder.location;
+        this.plannedDate = builder.plannedDate;
+        this.startTime = builder.startTime;
+        this.endTime = builder.endTime;
         this.plannedBudget = null;
         this.participantIds = new ArrayList<>();
     }
@@ -54,7 +44,8 @@ public class Event {
             LocalTime startTime,
             LocalTime endTime
     ) {
-        this(id, title, description, location, plannedDate, startTime, endTime, (Integer) null);
+        this(new Builder().id(id).title(title).description(description).location(location)
+                .plannedDate(plannedDate).startTime(startTime).endTime(endTime));
     }
 
     public Event(
@@ -66,6 +57,32 @@ public class Event {
             LocalTime endTime
     ) {
         this(null, title, description, location, plannedDate, startTime, endTime);
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Integer id;
+        private Integer ownerId;
+        private String title;
+        private String description;
+        private String location;
+        private LocalDate plannedDate;
+        private LocalTime startTime;
+        private LocalTime endTime;
+
+        public Builder id(Integer id) { this.id = id; return this; }
+        public Builder ownerId(Integer ownerId) { this.ownerId = ownerId; return this; }
+        public Builder title(String title) { this.title = title; return this; }
+        public Builder description(String description) { this.description = description; return this; }
+        public Builder location(String location) { this.location = location; return this; }
+        public Builder plannedDate(LocalDate date) { this.plannedDate = date; return this; }
+        public Builder startTime(LocalTime time) { this.startTime = time; return this; }
+        public Builder endTime(LocalTime time) { this.endTime = time; return this; }
+
+        public Event build() { return new Event(this); }
     }
 
     public void update(

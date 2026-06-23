@@ -37,9 +37,9 @@ class EventParticipantServiceTest {
 
     private final User currentUser = new User(1, "owner@test.com", "password", "Owner", false);
     private final User otherUser = new User(2, "other@test.com", "password", "Other", false);
-    private final Event sampleEvent = new Event(
-            1, "Gym", "", "", LocalDate.now(), null, null, 1
-    );
+    private final Event sampleEvent = Event.builder()
+            .id(1).ownerId(1).title("Gym").description("").location("").plannedDate(LocalDate.now())
+            .build();
 
     @BeforeEach
     void setUp() {

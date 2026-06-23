@@ -2,8 +2,8 @@ package com.example.lifetracker.integration;
 
 import com.example.lifetracker.dtos.EventRequestDTO;
 import com.example.lifetracker.dtos.RegisterRequestDTO;
-import com.example.lifetracker.persistence.JPAs.EventRepositoryJPA;
-import com.example.lifetracker.persistence.JPAs.UserRepositoryJPA;
+import com.example.lifetracker.persistence.jpas.EventRepositoryJPA;
+import com.example.lifetracker.persistence.jpas.UserRepositoryJPA;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

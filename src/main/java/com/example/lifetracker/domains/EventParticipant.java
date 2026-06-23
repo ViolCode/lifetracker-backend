@@ -26,7 +26,7 @@ public class EventParticipant {
         this.id = id;
         this.eventId = eventId;
         this.userId = userId;
-        this.isConfirmed = isConfirmed != null ? isConfirmed : false;
+        this.isConfirmed = isConfirmed != null && isConfirmed;
         this.invitedBy = invitedBy;
         this.invitedAt = invitedAt;
         this.confirmedAt = confirmedAt;

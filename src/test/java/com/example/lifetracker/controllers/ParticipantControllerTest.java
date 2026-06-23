@@ -19,9 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
-
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -41,7 +40,7 @@ class ParticipantControllerTest {
     private ObjectMapper objectMapper;
 
     private final ParticipantResponseDTO sampleParticipant = new ParticipantResponseDTO(
-            1, 2, "other@test.com", "Other User", false, "Owner", LocalDateTime.of(2026, 5, 11, 10, 0)
+            1, 2, "other@test.com", "Other User", false, "Owner", LocalDateTime.of(2026, Month.MAY, 11, 10, 0)
     );
 
     @BeforeEach
@@ -76,7 +75,7 @@ class ParticipantControllerTest {
     void add_returns200WhenValid() throws Exception {
         ParticipantRequestDTO request = new ParticipantRequestDTO(2, null);
 
-        when(service.addParticipant(eq(1), eq(2))).thenReturn(sampleParticipant);
+        when(service.addParticipant(1, 2)).thenReturn(sampleParticipant);
 
         mockMvc.perform(post("/events/1/participants")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -24,16 +24,16 @@ public class EventMapper {
     }
 
     public Event toDomain(EventEntity entity) {
-        return new Event(
-                entity.getId(),
-                entity.getTitle(),
-                entity.getDescription(),
-                entity.getLocation(),
-                entity.getPlannedDate(),
-                entity.getStartTime(),
-                entity.getEndTime(),
-                entity.getOwnerId()
-        );
+        return Event.builder()
+                .id(entity.getId())
+                .ownerId(entity.getOwnerId())
+                .title(entity.getTitle())
+                .description(entity.getDescription())
+                .location(entity.getLocation())
+                .plannedDate(entity.getPlannedDate())
+                .startTime(entity.getStartTime())
+                .endTime(entity.getEndTime())
+                .build();
     }
 
     public EventResponseDTO toDTO(

@@ -4,7 +4,7 @@ import com.example.lifetracker.domains.Expense;
 import com.example.lifetracker.entities.ExpenseEntity;
 import com.example.lifetracker.mappers.ExpenseMapper;
 import com.example.lifetracker.persistence.ExpenseRepository;
-import com.example.lifetracker.persistence.JPAs.ExpenseRepositoryJPA;
+import com.example.lifetracker.persistence.jpas.ExpenseRepositoryJPA;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

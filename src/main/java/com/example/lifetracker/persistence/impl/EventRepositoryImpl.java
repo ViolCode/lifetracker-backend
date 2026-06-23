@@ -4,7 +4,7 @@ import com.example.lifetracker.domains.Event;
 import com.example.lifetracker.entities.EventEntity;
 import com.example.lifetracker.mappers.EventMapper;
 import com.example.lifetracker.persistence.EventRepository;
-import com.example.lifetracker.persistence.JPAs.EventRepositoryJPA;
+import com.example.lifetracker.persistence.jpas.EventRepositoryJPA;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

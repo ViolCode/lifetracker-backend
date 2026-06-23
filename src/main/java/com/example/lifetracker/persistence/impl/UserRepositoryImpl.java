@@ -2,7 +2,7 @@ package com.example.lifetracker.persistence.impl;
 
 import com.example.lifetracker.domains.User;
 import com.example.lifetracker.mappers.UserMapper;
-import com.example.lifetracker.persistence.JPAs.UserRepositoryJPA;
+import com.example.lifetracker.persistence.jpas.UserRepositoryJPA;
 import com.example.lifetracker.persistence.UserRepository;
 import org.springframework.stereotype.Repository;
 

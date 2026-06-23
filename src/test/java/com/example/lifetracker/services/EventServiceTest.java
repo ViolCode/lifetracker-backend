@@ -5,7 +5,6 @@ import com.example.lifetracker.domains.User;
 import com.example.lifetracker.exceptions.NotFoundException;
 import com.example.lifetracker.persistence.EventRepository;
 import com.example.lifetracker.security.UserPrincipal;
-import com.example.lifetracker.services.EventParticipantService;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
