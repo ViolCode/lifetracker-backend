@@ -62,9 +62,6 @@ deploy:
     - docker-runner
   services:
     - docker:dind
-  variables:
-    DOCKER_HOST: tcp://localhost:2375
-    DOCKER_TLS_CERTDIR: ""
   before_script:
     - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
     - eval $(ssh-agent -s)
