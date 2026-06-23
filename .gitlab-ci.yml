@@ -63,7 +63,7 @@ deploy:
   services:
     - docker:dind
   variables:
-    CI_REGISTRY: "registry.fhict.nl" 
+    CI_REGISTRY: "registry.git.fhict.nl" 
   before_script:
     - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
     - eval $(ssh-agent -s)
