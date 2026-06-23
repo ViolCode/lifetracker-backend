@@ -66,12 +66,17 @@ deploy:
     DOCKER_HOST: tcp://docker:2376
     DOCKER_TLS_CERTDIR: "/certs"
   before_script:
-    - docker login -u "gitlab-ci-token" -p "$CI_JOB_TOKEN" "https://registry.git.fhict.nl"
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts
   script:
-    - docker build -t "registry.git.fhict.nl/$CI_PROJECT_PATH:latest" .
-    - docker push "registry.git.fhict.nl/$CI_PROJECT_PATH:latest"
-    - ssh "$SSH_USER@$SSH_HOST" "docker pull registry.git.fhict.nl/$CI_PROJECT_PATH:latest && docker stop lifetracker || true && docker rm lifetracker || true && docker run -d --name lifetracker --restart unless-stopped -p 8080:8080 registry.git.fhict.nl/$CI_PROJECT_PATH:latest"
+    - docker build -t "$DOCKER_USERNAME/lifetracker:latest" .
+    - docker push "$DOCKER_USERNAME/lifetracker:latest"
+    - ssh "$SSH_USER@$SSH_HOST" "
+        docker pull $DOCKER_USERNAME/lifetracker:latest &&
+        docker stop lifetracker || true &&
+        docker rm lifetracker || true &&
+        docker run -d --name lifetracker --restart unless-stopped -p 8080:8080 $DOCKER_USERNAME/lifetracker:latest
+      "
