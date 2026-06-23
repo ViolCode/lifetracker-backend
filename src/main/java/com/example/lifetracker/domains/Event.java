@@ -18,8 +18,8 @@ public class Event {
     private LocalDate plannedDate;
     private LocalTime startTime;
     private LocalTime endTime;
-    private List<Integer> participantIds;
-    private Double plannedBudget;
+    private final List<Integer> participantIds;
+    private final Double plannedBudget;
 
     private Event(Builder builder) {
         validate(builder.title, builder.plannedDate, builder.startTime, builder.endTime);
