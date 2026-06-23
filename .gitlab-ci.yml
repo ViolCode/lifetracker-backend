@@ -74,3 +74,4 @@ deploy:
     - docker build -t "$CI_REGISTRY_IMAGE:latest" .
     - docker push "$CI_REGISTRY_IMAGE:latest"
     - ssh "$SSH_USER@$SSH_HOST" "docker pull $CI_REGISTRY_IMAGE:latest && docker stop lifetracker || true && docker rm lifetracker || true && docker run -d --name lifetracker --restart unless-stopped -p 8080:8080 $CI_REGISTRY_IMAGE:latest"
+    
