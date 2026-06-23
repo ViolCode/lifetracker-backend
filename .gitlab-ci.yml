@@ -82,3 +82,4 @@ deploy:
         docker rm lifetracker || true &&
         docker run -d --name lifetracker --restart unless-stopped -p 8080:8080 $DOCKER_USERNAME/lifetracker:latest
       "
+      
