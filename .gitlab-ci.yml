@@ -62,13 +62,24 @@ deploy:
     - docker-runner
   services:
     - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: "/certs/client"
   before_script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
     - eval $(ssh-agent -s)
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - ssh-keyscan "$SSH_HOST" >> ~/.ssh/known_hosts
   script:
-    - docker build -t "$CI_REGISTRY_IMAGE:latest" .
-    - docker push "$CI_REGISTRY_IMAGE:latest"
-    - ssh "$SSH_USER@$SSH_HOST" "docker pull $CI_REGISTRY_IMAGE:latest && docker stop lifetracker || true && docker rm lifetracker || true && docker run -d --name lifetracker --restart unless-stopped -p 8080:8080 $CI_REGISTRY_IMAGE:latest"
+    - docker build -t "$DOCKER_USERNAME/lifetracker:latest" .
+    - docker push "$DOCKER_USERNAME/lifetracker:latest"
+    - ssh "$SSH_USER@$SSH_HOST" "
+        docker pull $DOCKER_USERNAME/lifetracker:latest &&
+        docker stop lifetracker || true &&
+        docker rm lifetracker || true &&
+        docker run -d --name lifetracker --restart unless-stopped -p 8080:8080 $DOCKER_USERNAME/lifetracker:latest
+      "
+      
