@@ -60,8 +60,8 @@ deploy:
   image: docker:latest
   tags:
     - docker-runner
-  services:
-    - docker:dind
+  variables:
+    DOCKER_HOST: unix:///var/run/docker.sock
   before_script:
     - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
     - eval $(ssh-agent -s)
