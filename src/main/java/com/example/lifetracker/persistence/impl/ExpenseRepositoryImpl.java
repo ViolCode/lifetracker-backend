@@ -48,38 +48,11 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     }
 
     @Override
-    public List<Expense> getByEvent(
-            int eventId,
-            Integer userId
-    ) {
-
-        return jpa.findByEventIdAndUserId(
-                        eventId,
-                        userId
-                )
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
-    }
-
-    @Override
     public List<Expense> getAllByEvent(int eventId) {
         return jpa.findByEventId(eventId)
                 .stream()
                 .map(mapper::toDomain)
                 .toList();
-    }
-
-    @Override
-    public Double getTotalByEvent(
-            int eventId,
-            Integer userId
-    ) {
-
-        return jpa.getTotalByEvent(
-                eventId,
-                userId
-        );
     }
 
     @Override

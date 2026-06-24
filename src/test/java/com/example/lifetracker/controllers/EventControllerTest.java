@@ -289,10 +289,7 @@ class EventControllerTest {
     @Test
     void delete_returns404_whenEventDoesNotExist() throws Exception {
 
-        doThrow(
-                new NotFoundException(
-                        "Event not found"
-                )
+        doThrow(new NotFoundException("Event not found")
         )
                 .when(service)
                 .delete(999);

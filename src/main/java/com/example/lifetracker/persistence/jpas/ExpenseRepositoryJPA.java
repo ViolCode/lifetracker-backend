@@ -14,23 +14,7 @@ public interface ExpenseRepositoryJPA
             Integer userId
     );
 
-    List<ExpenseEntity> findByEventIdAndUserId(
-            Integer eventId,
-            Integer userId
-    );
-
     List<ExpenseEntity> findByEventId(Integer eventId);
-
-    @Query("""
-        SELECT COALESCE(SUM(e.amount), 0)
-        FROM ExpenseEntity e
-        WHERE e.eventId = :eventId
-        AND e.userId = :userId
-    """)
-    Double getTotalByEvent(
-            @Param("eventId") Integer eventId,
-            @Param("userId") Integer userId
-    );
 
     @Query("""
         SELECT COALESCE(SUM(e.amount), 0)

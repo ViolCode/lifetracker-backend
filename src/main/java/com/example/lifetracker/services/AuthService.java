@@ -26,21 +26,10 @@ public class AuthService {
             String name
     ) {
 
-        repository.findByEmail(email)
-                .ifPresent(user -> {
-                    throw new ConflictException(
-                            "Email already exists"
-                    );
-                });
+        repository.findByEmail(email).ifPresent(user -> {throw new ConflictException("Email already exists");});
 
-        String hashedPassword =
-                passwordEncoder.encode(password);
-
-        User user = new User(
-                email,
-                hashedPassword,
-                name
-        );
+        String hashedPassword = passwordEncoder.encode(password);
+        User user = new User(email, hashedPassword, name);
 
         return repository.save(user);
     }

@@ -56,7 +56,8 @@ class EventTest {
         ValidationException exception =
                 assertThrows(
                         ValidationException.class,
-                        () -> new Event("Gym", "desc", "loc", FIXED_DATE, LocalTime.of(15, 0), LocalTime.of(14, 0))
+                        () -> new Event("Gym", "desc", "loc", FIXED_DATE, LocalTime.of(
+                                15, 0), LocalTime.of(14, 0))
                 );
 
         assertEquals(
